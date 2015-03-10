@@ -62,7 +62,7 @@ void MySQLTools::on_backupDatabaseButton_clicked()
 void MySQLTools::on_restoreDatabaseButton_clicked()
 {
     // Show dialog and get filename
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Save File"), QDir::homePath(), tr("SQL Files (*.sql)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("SQL Files (*.sql)"));
 
     // If no filename was specified, just return
     if (fileName.isEmpty()) {
