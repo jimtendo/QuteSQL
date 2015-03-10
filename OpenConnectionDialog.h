@@ -2,6 +2,8 @@
 #define OPENCONNECTIONDIALOG_H
 
 #include <QDialog>
+#include <QListWidgetItem>
+
 
 namespace Ui {
 class OpenConnectionDialog;
@@ -33,16 +35,20 @@ public:
     QString getUsername();
     QString getPassword();
     int     getPort();
-    bool    getSaveConnection();
 
 private slots:
     void on_driverCombo_currentIndexChanged(const QString &arg1);
 
     void on_fileButton_clicked();
 
-    void on_okButton_clicked();
+    void on_addButton_clicked();
 
-    void on_connectionsComboBox_currentIndexChanged(int index);
+    void on_connectionsListWidget_itemActivated(QListWidgetItem *item);
+
+    void on_removeButton_clicked();
+
+private:
+    void reloadConnections();
 
 private:
     Ui::OpenConnectionDialog *ui;

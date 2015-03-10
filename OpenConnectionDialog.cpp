@@ -12,29 +12,11 @@ OpenConnectionDialog::OpenConnectionDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // Add a new connection by default
+    ui->connectionsListWidget->addItem("-- New Connection --");
+
     // Load saved connections
-    QSettings settings;
-    int size = settings.beginReadArray("connections");
-    for (int i = 0; i < size; i++) {
-        settings.setArrayIndex(i);
-
-        // Add connection from settings to list
-        SavedConnection *connection = new SavedConnection;
-        connection->name = settings.value("name").toString();
-        connection->database = settings.value("database").toString();
-        connection->driver = settings.value("driver").toString();
-        connection->hostname = settings.value("hostname").toString();
-        connection->username = settings.value("username").toString();
-        connection->password = settings.value("password").toString();
-        connection->port = settings.value("port").toInt();
-
-        // Append to saved connections
-        savedConnections.append(connection);
-
-        // Add item to combo box
-        ui->connectionsComboBox->addItem(connection->name, savedConnections.length());
-    }
-    settings.endArray();
+    reloadConnections();
 
     // Setup list of drivers for selection
     foreach (QString driver, QSqlDatabase::drivers()) {
@@ -88,11 +70,6 @@ int OpenConnectionDialog::getPort()
     return ui->portSpinBox->text().toInt();
 }
 
-bool OpenConnectionDialog::getSaveConnection()
-{
-    return ui->saveCheckBox->isChecked();
-}
-
 void OpenConnectionDialog::on_driverCombo_currentIndexChanged(const QString &arg1)
 {
     // Disable fields if using SQLite
@@ -123,50 +100,63 @@ void OpenConnectionDialog::on_fileButton_clicked()
     ui->databaseEdit->setText(fileName);
 }
 
-void OpenConnectionDialog::on_okButton_clicked()
+void OpenConnectionDialog::on_addButton_clicked()
 {
-    if (ui->saveCheckBox->isChecked()) {
+    // Add connection from settings to list
+    SavedConnection *newConnection = new SavedConnection;
+    newConnection->name = getName();
+    newConnection->database = getDatabase();
+    newConnection->driver = getDriver();
+    newConnection->hostname = getHostname();
+    newConnection->username = getUsername();
+    newConnection->password = getPassword();
+    newConnection->port = getPort();
+
+    // Append to saved connections
+    savedConnections.append(newConnection);
+
+    // Save connections
+    QSettings settings;
+    settings.beginWriteArray("connections");
+
+    int i = 0;
+    foreach(SavedConnection* connection, savedConnections)
+    {
+        settings.setArrayIndex(i);
 
         // Add connection from settings to list
-        SavedConnection *newConnection = new SavedConnection;
-        newConnection->name = getName();
-        newConnection->database = getDatabase();
-        newConnection->driver = getDriver();
-        newConnection->hostname = getHostname();
-        newConnection->username = getUsername();
-        newConnection->password = getPassword();
-        newConnection->port = getPort();
+        settings.setValue("name", connection->name);
+        settings.setValue("database", connection->database);
+        settings.setValue("driver", connection->driver);
+        settings.setValue("hostname", connection->hostname);
+        settings.setValue("username", connection->username);
+        settings.setValue("password", connection->password);
+        settings.setValue("port", connection->port);
 
-        // Append to saved connections
-        savedConnections.append(newConnection);
-
-        // Save connections
-        QSettings settings;
-        settings.beginWriteArray("connections");
-
-        int i = 0;
-        foreach(SavedConnection* connection, savedConnections)
-        {
-            settings.setArrayIndex(i);
-
-            // Add connection from settings to list
-            settings.setValue("name", connection->name);
-            settings.setValue("database", connection->database);
-            settings.setValue("driver", connection->driver);
-            settings.setValue("hostname", connection->hostname);
-            settings.setValue("username", connection->username);
-            settings.setValue("password", connection->password);
-            settings.setValue("port", connection->port);
-
-            i++;
-        }
-        settings.endArray();
+        i++;
     }
+    settings.endArray();
+
+    // Reload connections widget
+    reloadConnections();
 }
 
-void OpenConnectionDialog::on_connectionsComboBox_currentIndexChanged(int index)
+void OpenConnectionDialog::on_connectionsListWidget_itemActivated(QListWidgetItem *item)
 {
-    SavedConnection *connection = savedConnections.at(index);
+    SavedConnection *connection;
+
+    QList<SavedConnection*>::iterator i;
+    for (i = savedConnections.begin(); i != savedConnections.end(); ++i) {
+        if (item->text() == "-- New Connection --") {
+            connection = new SavedConnection;
+            break;
+        }
+
+        if ((*i)->name == item->text()) {
+            connection = *i;
+            break;
+        }
+    }
 
     int driver = ui->driverCombo->findText(connection->driver);
     ui->driverCombo->setCurrentIndex(driver);
@@ -175,4 +165,80 @@ void OpenConnectionDialog::on_connectionsComboBox_currentIndexChanged(int index)
     ui->passwordEdit->setText(connection->password);
     ui->hostnameEdit->setText(connection->hostname);
     ui->portSpinBox->setValue(connection->port);
+}
+
+void OpenConnectionDialog::reloadConnections()
+{
+    // Clear out the list widget
+    ui->connectionsListWidget->clear();
+
+    // Add a new connection by default
+    ui->connectionsListWidget->addItem("-- New Connection --");
+
+    // Load saved connections
+    QSettings settings;
+    int size = settings.beginReadArray("connections");
+    for (int i = 0; i < size; i++) {
+        settings.setArrayIndex(i);
+
+        // Add connection from settings to list
+        SavedConnection *connection = new SavedConnection;
+        connection->name = settings.value("name").toString();
+        connection->database = settings.value("database").toString();
+        connection->driver = settings.value("driver").toString();
+        connection->hostname = settings.value("hostname").toString();
+        connection->username = settings.value("username").toString();
+        connection->password = settings.value("password").toString();
+        connection->port = settings.value("port").toInt();
+
+        // Append to saved connections
+        savedConnections.append(connection);
+
+        // Add item to combo box
+        ui->connectionsListWidget->addItem(connection->name);
+    }
+    settings.endArray();
+}
+
+void OpenConnectionDialog::on_removeButton_clicked()
+{
+    // Get current item
+    QListWidgetItem *item = ui->connectionsListWidget->currentItem();
+
+    QList<SavedConnection*>::iterator i;
+    for (i = savedConnections.begin(); i != savedConnections.end(); ++i) {
+        if (item->text() == "-- New Connection --") {
+            break;
+        }
+
+        if ((*i)->name == item->text()) {
+            savedConnections.removeOne(*i);
+            break;
+        }
+    }
+
+    // Save connections
+    QSettings settings;
+    settings.beginWriteArray("connections");
+
+    int j = 0;
+    foreach(SavedConnection* connection, savedConnections)
+    {
+        settings.setArrayIndex(j);
+
+        // Add connection from settings to list
+        settings.setValue("name", connection->name);
+        settings.setValue("database", connection->database);
+        settings.setValue("driver", connection->driver);
+        settings.setValue("hostname", connection->hostname);
+        settings.setValue("username", connection->username);
+        settings.setValue("password", connection->password);
+        settings.setValue("port", connection->port);
+
+        j++;
+    }
+    settings.endArray();
+
+    // Reload connections widget
+    reloadConnections();
 }
