@@ -13,12 +13,8 @@ class MySQLExtension : public Extension
 Q_OBJECT
 
 public:
-    explicit MySQLExtension(QObject *parent = 0);
+    explicit MySQLExtension(QObject *parent = 0, QSqlDatabase *database = new QSqlDatabase());
     ~MySQLExtension();
-
-public slots:
-    void backupDatabase();
-    void restoreDatabase();
 
 private:
     QToolBar m_toolsToolBar;

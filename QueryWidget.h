@@ -17,7 +17,7 @@ public:
     explicit QueryWidget(QWidget *parent = 0);
     ~QueryWidget();
 
-    void setDatabase(QSqlDatabase database);
+    void setDatabase(QSqlDatabase *database);
 
 private slots:
     void on_runButton_clicked();
@@ -28,7 +28,7 @@ private:
     Ui::QueryWidget *ui;
 
     // Database
-    QSqlDatabase m_database;
+    QSqlDatabase *m_database;
 
     // Model for query
     QSqlQueryModel *m_model;

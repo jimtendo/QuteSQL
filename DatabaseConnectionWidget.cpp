@@ -17,7 +17,11 @@ DatabaseConnectionWidget::DatabaseConnectionWidget(QWidget *parent) :
 
 DatabaseConnectionWidget::~DatabaseConnectionWidget()
 {
+    // Close this connection
     m_database.close();
+
+    // Remove the actual database (is this necessary if I close it?)
+    QSqlDatabase::removeDatabase(m_database.connectionName());
 
     delete m_extension;
 
@@ -31,17 +35,7 @@ QSqlDatabase DatabaseConnectionWidget::database()
 
 QString DatabaseConnectionWidget::name()
 {
-    // If we're using SQLite, get the filename
-    if (m_database.driverName() == "QSQLITE") {
-        QUrl url(m_database.databaseName());
-        return url.fileName();
-    }
-
-    if (m_database.driverName() == "QMYSQL") {
-        return QString(m_database.databaseName() + " - " + m_database.userName() + "@" + m_database.hostName() + ":" + QString::number(m_database.port()));
-    }
-
-    return m_database.databaseName();
+    return m_database.connectionName();
 }
 
 QSqlError DatabaseConnectionWidget::lastError()
@@ -49,16 +43,14 @@ QSqlError DatabaseConnectionWidget::lastError()
     return m_database.lastError();
 }
 
-bool DatabaseConnectionWidget::connectToDatabase(QString driver, QString host, QString database, QString username, QString password, int port)
+bool DatabaseConnectionWidget::connectToDatabase(QString name, QString driver, QString host, QString database, QString username, QString password, int port)
 {
-    m_database = QSqlDatabase::addDatabase(driver, QString(database + " - " + username + "@" + host + ":" + port));
+    m_database = QSqlDatabase::addDatabase(driver, name);
     m_database.setHostName(host);
     m_database.setDatabaseName(database);
     m_database.setUserName(username);
     m_database.setPassword(password);
     m_database.setPort(port);
-
-    qDebug() << m_database.hostName();
 
     // Attempt to connect
     if (!m_database.open()) {
@@ -67,15 +59,14 @@ bool DatabaseConnectionWidget::connectToDatabase(QString driver, QString host, Q
 
     // Setup tabs
     ui->explorerTab->setDatabase(&m_database);
-    ui->queryTab->setDatabase(m_database);
+    ui->queryTab->setDatabase(&m_database);
     ui->sqlTab->setDatabase(m_database);
 
     // If there's extra support for this driver, add it
     if (driver == "QMYSQL" || driver == "QMYSQL3") {
 
         // Create the extension (adds Tools widget, etc)
-        m_extension = new MySQLExtension(this);
-        m_extension->setDatabase(&m_database);
+        m_extension = new MySQLExtension(this, &m_database);
     }
 
     // Setup the extensions if they exist

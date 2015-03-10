@@ -37,6 +37,7 @@ bool BrowseWidget::setTable(QString table)
 
     // Connect view to model
     ui->tableView->setModel(m_model);
+    ui->tableView->setEnabled(true);
     ui->tableView->show();
 
     return true;

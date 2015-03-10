@@ -23,7 +23,7 @@ public:
 
     QString name();
 
-    bool connectToDatabase(QString driver, QString host, QString database, QString username, QString password, int port = 0);
+    bool connectToDatabase(QString name, QString driver, QString host, QString database, QString username, QString password, int port = 0);
 
     QSqlError lastError();
 

@@ -28,6 +28,7 @@ bool SchemaWidget::setTable(QString table)
     m_model->setQuery("DESC " + table, *m_database);
 
     // Attach the result table to the model
+    ui->tableView->setEnabled(true);
     ui->tableView->setModel(m_model);
 
     return true;

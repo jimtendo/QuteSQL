@@ -5,6 +5,7 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QDir>
+#include <QDebug>
 
 MySQLTools::MySQLTools(QWidget *parent) :
     QWidget(parent),

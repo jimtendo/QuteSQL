@@ -18,7 +18,7 @@ public:
 
     void setDatabase(QSqlDatabase *database);
 
-private slots:
+public slots:
     void on_backupDatabaseButton_clicked();
 
     void on_restoreDatabaseButton_clicked();

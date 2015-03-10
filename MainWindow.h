@@ -30,6 +30,8 @@ private slots:
 
     void on_databaseConnectionsTabWidget_currentChanged(int index);
 
+    void on_actionClose_Connection_triggered();
+
 signals:
     void statusEvent(const QString&);
 

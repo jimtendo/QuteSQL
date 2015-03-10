@@ -17,7 +17,7 @@ QueryWidget::~QueryWidget()
     delete ui;
 }
 
-void QueryWidget::setDatabase(QSqlDatabase database)
+void QueryWidget::setDatabase(QSqlDatabase *database)
 {
     // Set the database
     m_database = database;
@@ -29,7 +29,7 @@ void QueryWidget::setDatabase(QSqlDatabase database)
 void QueryWidget::on_runButton_clicked()
 {
     // Set the query from the query input box
-    m_model->setQuery(ui->queryEdit->toPlainText(), m_database);
+    m_model->setQuery(ui->queryEdit->toPlainText(), *m_database);
 
     // Attach the result table to the model
     ui->resultTableView->setModel(m_model);

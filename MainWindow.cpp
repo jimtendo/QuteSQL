@@ -34,6 +34,7 @@ void MainWindow::on_actionNew_Connection_triggered()
     if (connectionDialog.exec() == QDialog::Accepted) {
 
         // Get information from widget
+        QString name = connectionDialog.getName();
         QString driver = connectionDialog.getDriver();
         QString hostname = connectionDialog.getHostname();
         QString database = connectionDialog.getDatabase();
@@ -45,7 +46,7 @@ void MainWindow::on_actionNew_Connection_triggered()
         DatabaseConnectionWidget *databaseConnectionWidget = new DatabaseConnectionWidget(this);
 
         // Connect to database
-        if (!databaseConnectionWidget->connectToDatabase(driver, hostname, database, username, password, port)) {
+        if (!databaseConnectionWidget->connectToDatabase(name, driver, hostname, database, username, password, port)) {
 
             // Show message box if we couldn't connect
             QMessageBox::critical(this, "Could not connect", databaseConnectionWidget->lastError().databaseText());
@@ -94,7 +95,14 @@ void MainWindow::on_actionAbout_QuteSql_triggered()
 
 void MainWindow::on_databaseConnectionsTabWidget_tabCloseRequested(int index)
 {
+    // Get a pointer to the tab instance so we can delete it later
+    DatabaseConnectionWidget *widget = (DatabaseConnectionWidget*)ui->databaseConnectionsTabWidget->widget(index);
+
+    // Remove the tab
     ui->databaseConnectionsTabWidget->removeTab(index);
+
+    // Actually delete the widget
+    delete widget;
 }
 
 void MainWindow::on_databaseConnectionsTabWidget_currentChanged(int index)
@@ -122,4 +130,19 @@ void MainWindow::on_databaseConnectionsTabWidget_currentChanged(int index)
             addToolBar((*i));
         }
     }
+}
+
+void MainWindow::on_actionClose_Connection_triggered()
+{
+    // Get the current tab index
+    int currentTabIndex = ui->databaseConnectionsTabWidget->currentIndex();
+
+    // Get a pointer to the widget that the current index refers to so we can delete it later
+    DatabaseConnectionWidget *widget = (DatabaseConnectionWidget*)ui->databaseConnectionsTabWidget->widget(currentTabIndex);
+
+    // Remove the tab
+    ui->databaseConnectionsTabWidget->removeTab(currentTabIndex);
+
+    // Delete it
+    delete widget;
 }

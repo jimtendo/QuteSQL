@@ -28,10 +28,8 @@ class Extension : public QObject
 Q_OBJECT
 
 public:
-    explicit Extension(QObject *parent = 0);
+    explicit Extension(QObject *parent = 0, QSqlDatabase *database = new QSqlDatabase());
     ~Extension();
-
-    void setDatabase(QSqlDatabase *database);
 
     virtual QList<ExtensionTab*> getTabs();
     virtual QList<QToolBar*> getToolBars();

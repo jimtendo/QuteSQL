@@ -15,7 +15,11 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="3">
-    <widget class="QTableView" name="tableView"/>
+    <widget class="QTableView" name="tableView">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
    <item row="1" column="0">
     <spacer name="horizontalSpacer">
@@ -36,7 +40,9 @@
       <string>Add</string>
      </property>
      <property name="icon">
-      <iconset theme="add"/>
+      <iconset theme="add">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
    </item>
@@ -46,7 +52,9 @@
       <string>Remove</string>
      </property>
      <property name="icon">
-      <iconset theme="remove"/>
+      <iconset theme="remove">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
    </item>

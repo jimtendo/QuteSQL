@@ -1,5 +1,7 @@
 #include "Extension.h"
 
+#include <QDebug>
+
 ExtensionTab::ExtensionTab(QWidget *widget, QIcon icon, QString label)
 {
     m_widget = widget;
@@ -26,20 +28,15 @@ QString ExtensionTab::getLabel()
     return m_label;
 }
 
-Extension::Extension(QObject *parent) :
+Extension::Extension(QObject *parent, QSqlDatabase *database) :
     QObject(parent)
 {
-
+    m_database = database;
 }
 
 Extension::~Extension()
 {
 
-}
-
-void Extension::setDatabase(QSqlDatabase *database)
-{
-    m_database = database;
 }
 
 QList<ExtensionTab*> Extension::getTabs()
