@@ -26,6 +26,11 @@ OpenConnectionDialog::OpenConnectionDialog(QWidget *parent) :
 
 OpenConnectionDialog::~OpenConnectionDialog()
 {
+    // Clear out SavedConnections
+    qDeleteAll(savedConnections);
+    savedConnections.clear();
+
+    // Delete UI
     delete ui;
 }
 
@@ -169,6 +174,10 @@ void OpenConnectionDialog::on_connectionsListWidget_itemActivated(QListWidgetIte
 
 void OpenConnectionDialog::reloadConnections()
 {
+    // Clear out SavedConnections
+    qDeleteAll(savedConnections);
+    savedConnections.clear();
+
     // Clear out the list widget
     ui->connectionsListWidget->clear();
 

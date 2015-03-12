@@ -23,6 +23,9 @@ private slots:
 
     void on_runSqlButton_clicked();
 
+signals:
+    void refreshNeeded();
+
 private:
     Ui::SqlWidget *ui;
 

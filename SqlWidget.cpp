@@ -81,5 +81,9 @@ void SqlWidget::on_runSqlButton_clicked()
         ui->progressBar->setValue( ui->progressBar->value() + 1 );
     }
 
+    // Let the user know the code has been run
     QMessageBox::information(this, "SQL Executed Successfully", "SQL Code has been executed successfully.");
+
+    // Emit a signal that the database needs refreshing
+    emit refreshNeeded();
 }

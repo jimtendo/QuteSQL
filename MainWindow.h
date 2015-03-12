@@ -32,6 +32,8 @@ private slots:
 
     void on_actionClose_Connection_triggered();
 
+    void on_actionRefresh_triggered();
+
 signals:
     void statusEvent(const QString&);
 
@@ -41,8 +43,6 @@ private:
     QList<DatabaseConnectionWidget> m_databaseConnections;
 
     DatabaseConnectionWidget *m_currentDatabase;
-
-    bool connectToDatabase(QString driver, QString host, QString database, QString username, QString password, int port = 0);
 };
 
 #endif // MAINWINDOW_H

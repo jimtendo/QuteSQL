@@ -29,6 +29,9 @@ public:
 
     Extension *getExtension();
 
+public slots:
+    void refresh();
+
 private:
     Ui::DatabaseConnectionWidget *ui;
 

@@ -57,16 +57,23 @@ bool DatabaseConnectionWidget::connectToDatabase(QString name, QString driver, Q
         return false;
     }
 
-    // Setup tabs
+    // Setup Explorer Widget
     ui->explorerTab->setDatabase(&m_database);
+
+    // Setup Query Widget
     ui->queryTab->setDatabase(&m_database);
+    connect(ui->queryTab, SIGNAL(refreshNeeded()), this, SLOT(refresh()));
+
+    // Setup SQL Widget
     ui->sqlTab->setDatabase(m_database);
+    connect(ui->sqlTab, SIGNAL(refreshNeeded()), this, SLOT(refresh()));
 
     // If there's extra support for this driver, add it
     if (driver == "QMYSQL" || driver == "QMYSQL3") {
 
         // Create the extension (adds Tools widget, etc)
         m_extension = new MySQLExtension(this, &m_database);
+        connect(m_extension, SIGNAL(refreshNeeded()), this, SLOT(refresh()));
     }
 
     // Setup the extensions if they exist
@@ -86,4 +93,9 @@ bool DatabaseConnectionWidget::connectToDatabase(QString name, QString driver, Q
 Extension *DatabaseConnectionWidget::getExtension()
 {
     return m_extension;
+}
+
+void DatabaseConnectionWidget::refresh()
+{
+    ui->explorerTab->refresh();
 }

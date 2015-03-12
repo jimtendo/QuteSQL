@@ -24,6 +24,9 @@ private slots:
 
     void on_clearButton_clicked();
 
+signals:
+    void refreshNeeded();
+
 private:
     Ui::QueryWidget *ui;
 

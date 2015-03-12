@@ -59,23 +59,15 @@ void MainWindow::on_actionNew_Connection_triggered()
         }
 
         // Create icon and this to the list of tabs
-        QIcon tabIcon = QIcon::fromTheme("database");
-        ui->databaseConnectionsTabWidget->addTab(databaseConnectionWidget, tabIcon, databaseConnectionWidget->name());
+        ui->databaseConnectionsTabWidget->addTab(databaseConnectionWidget, QIcon::fromTheme("database"), databaseConnectionWidget->name());
+        ui->databaseConnectionsTabWidget->setCurrentWidget(databaseConnectionWidget);
+
+        // Set the current database
+        m_currentDatabase = databaseConnectionWidget;
 
         // Emit status event
         emit statusEvent("Connection to database successful");
     }
-}
-
-bool MainWindow::connectToDatabase(QString driver, QString host, QString database, QString username, QString password, int port)
-{
-    QSqlDatabase db = QSqlDatabase::addDatabase(driver, host+database);
-    db.setHostName(host);
-    db.setDatabaseName(database);
-    db.setUserName(username);
-    db.setPassword(password);
-    db.setPort(port);
-    return db.open();
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -113,7 +105,6 @@ void MainWindow::on_databaseConnectionsTabWidget_currentChanged(int index)
         QList<QToolBar*> toolbars = m_currentDatabase->getExtension()->getToolBars();
         QList<QToolBar*>::iterator i;
         for (i = toolbars.begin(); i != toolbars.end(); ++i) {
-            (*i)->setHidden(true);
             removeToolBar((*i));
         }
     }
@@ -145,4 +136,12 @@ void MainWindow::on_actionClose_Connection_triggered()
 
     // Delete it
     delete widget;
+}
+
+void MainWindow::on_actionRefresh_triggered()
+{
+    // If there is a current database, then refresh it
+    if (m_currentDatabase) {
+        m_currentDatabase->refresh();
+    }
 }

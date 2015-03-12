@@ -34,6 +34,9 @@ public:
     virtual QList<ExtensionTab*> getTabs();
     virtual QList<QToolBar*> getToolBars();
 
+signals:
+    void refreshNeeded();
+
 protected:
     QSqlDatabase *m_database;
 

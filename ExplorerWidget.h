@@ -19,6 +19,9 @@ public:
 
     void setDatabase(QSqlDatabase *database);
 
+public slots:
+    void refresh();
+
 private slots:
     void on_tableListWidget_itemActivated(QListWidgetItem *item);
 

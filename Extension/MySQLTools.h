@@ -23,6 +23,12 @@ public slots:
 
     void on_restoreDatabaseButton_clicked();
 
+private slots:
+    void on_clearDatabaseButton_clicked();
+
+signals:
+    void refreshNeeded();
+
 private:
     Ui::MySQLTools *ui;
 

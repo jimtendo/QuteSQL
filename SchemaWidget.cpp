@@ -25,7 +25,13 @@ void SchemaWidget::setDatabase(QSqlDatabase *database)
 bool SchemaWidget::setTable(QString table)
 {
     // Set the query from the query input box
-    m_model->setQuery("DESC " + table, *m_database);
+    if (m_database->driverName() == "QSQLITE") {
+        m_model->setQuery("PRAGMA table_info(" + table + ")", *m_database);
+    }
+
+    else {
+        m_model->setQuery("DESC " + table, *m_database);
+    }
 
     // Attach the result table to the model
     ui->tableView->setEnabled(true);

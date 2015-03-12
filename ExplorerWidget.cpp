@@ -24,9 +24,20 @@ void ExplorerWidget::setDatabase(QSqlDatabase *database)
     ui->browseTab->setDatabase(m_database);
     ui->schemaTab->setDatabase(m_database);
 
-    // Load the tables
+    // Refresh table list
+    refresh();
+}
+
+void ExplorerWidget::refresh()
+{
+    // Clear list of tables
+    ui->tableListWidget->clear();
+
+    // Repopulate list of tables
     foreach (QString table, m_database->tables()) {
-        ui->tableListWidget->addItem(table);
+
+        QListWidgetItem *tableItem = new QListWidgetItem(QIcon::fromTheme("folder"), table);
+        ui->tableListWidget->addItem(tableItem);
     }
 }
 
