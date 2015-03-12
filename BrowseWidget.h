@@ -21,6 +21,9 @@ public:
 
     bool setTable(QString table);
 
+private slots:
+    void on_filterButton_clicked();
+
 private:
     Ui::BrowseWidget *ui;
 

@@ -40,5 +40,14 @@ bool BrowseWidget::setTable(QString table)
     ui->tableView->setEnabled(true);
     ui->tableView->show();
 
+    // Enable filter
+    ui->filterEdit->setEnabled(true);
+    ui->filterButton->setEnabled(true);
+
     return true;
+}
+
+void BrowseWidget::on_filterButton_clicked()
+{
+    m_model->setFilter(ui->filterEdit->text());
 }
