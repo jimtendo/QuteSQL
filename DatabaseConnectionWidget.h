@@ -2,6 +2,7 @@
 #define DATABASECONNECTIONWIDGET_H
 
 #include <QWidget>
+#include <QProcess>
 #include <QSqlDatabase>
 #include <QSqlError>
 
@@ -23,6 +24,8 @@ public:
 
     QString name();
 
+    bool createSshTunnel(QString username, QString password, QString host, int remotePort, int localPort);
+
     bool connectToDatabase(QString name, QString driver, QString host, QString database, QString username, QString password, int port = 0);
 
     QSqlError lastError();
@@ -34,6 +37,9 @@ public slots:
 
 private:
     Ui::DatabaseConnectionWidget *ui;
+
+    // SSH Tunnel
+    QProcess m_sshTunnel;
 
     // Database connection
     QSqlDatabase m_database;

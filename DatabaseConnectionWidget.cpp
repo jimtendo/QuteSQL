@@ -43,6 +43,28 @@ QSqlError DatabaseConnectionWidget::lastError()
     return m_database.lastError();
 }
 
+bool DatabaseConnectionWidget::createSshTunnel(QString username, QString password, QString host, int remotePort, int localPort)
+{
+    //-fNg -L 16111:127.0.0.1:3306 forge@www.aussieindoorsports.com.au
+
+    // Compile Arguments
+    QStringList arguments;
+    arguments << "-fNg" << QString(QString::number(localPort) + ":" + "127.0.0.1" + ":" + QString::number(remotePort)) << QString(username + "@" + host);
+
+    // Execute SSH command
+    m_sshTunnel.start("ssh", arguments);
+
+    // Wait until finished
+    if (!m_sshTunnel.waitForFinished()) {
+        return false;
+    }
+
+    //  Check for exit code
+    qDebug() << "SSH tunnel binded to 127.0.0.1:" << localPort << m_sshTunnel.exitCode();
+
+    return true;
+}
+
 bool DatabaseConnectionWidget::connectToDatabase(QString name, QString driver, QString host, QString database, QString username, QString password, int port)
 {
     m_database = QSqlDatabase::addDatabase(driver, name);

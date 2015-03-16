@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include <QDebug>
+
 #include <QMessageBox>
 #include <QtSql/QSqlDatabase>
 #include <QSettings>
@@ -45,6 +47,33 @@ void MainWindow::on_actionNew_Connection_triggered()
         // Create a new database connection widget
         DatabaseConnectionWidget *databaseConnectionWidget = new DatabaseConnectionWidget(this);
 
+        // If we want this to be SSH tunneled
+        if (connectionDialog.getSshTunnelChecked()) {
+
+            // Get SSH information from dialog
+            QString sshHostname = connectionDialog.getSshHostname();
+            QString sshUsername = connectionDialog.getSshUsername();
+            QString sshPassword = connectionDialog.getSshPassword();
+            int sshPort = connectionDialog.getSshPort();
+            int sshForwardedPort = qrand() % 1000 + 17000; // Get a random port to forward to between 17000 and 18000
+
+            // Try to create the tunnel
+            if (!databaseConnectionWidget->createSshTunnel(sshUsername, sshPassword, sshHostname, sshPort, sshForwardedPort)) {
+
+                // Show message box if we couldn't connect
+                QMessageBox::critical(this, "Error", "Could not create SSH Tunnel");
+
+                // Update status
+                emit statusEvent("Could not create SSH tunnel");
+
+                // Delete this widget
+                delete databaseConnectionWidget;
+
+                // And return to prevent further execution
+                return;
+            }
+        }
+
         // Connect to database
         if (!databaseConnectionWidget->connectToDatabase(name, driver, hostname, database, username, password, port)) {
 
@@ -53,6 +82,9 @@ void MainWindow::on_actionNew_Connection_triggered()
 
             // Update status
             emit statusEvent(databaseConnectionWidget->lastError().databaseText());
+
+            // Delete this widget
+            delete databaseConnectionWidget;
 
             // And return to prevent further execution
             return;

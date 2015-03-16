@@ -5,6 +5,7 @@
 
 BrowseWidget::BrowseWidget(QWidget *parent) :
     QWidget(parent),
+    m_model(NULL),
     ui(new Ui::BrowseWidget)
 {
     ui->setupUi(this);
@@ -13,7 +14,9 @@ BrowseWidget::BrowseWidget(QWidget *parent) :
 BrowseWidget::~BrowseWidget()
 {
     // Delete the model
-    delete m_model;
+    if (m_model) {
+        delete m_model;
+    }
 
     // Delete the user interface
     delete ui;

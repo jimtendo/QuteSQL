@@ -12,9 +12,6 @@ OpenConnectionDialog::OpenConnectionDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Add a new connection by default
-    ui->connectionsListWidget->addItem("-- New Connection --");
-
     // Load saved connections
     reloadConnections();
 
@@ -75,6 +72,31 @@ int OpenConnectionDialog::getPort()
     return ui->portSpinBox->text().toInt();
 }
 
+bool OpenConnectionDialog::getSshTunnelChecked()
+{
+    return ui->sshTunnelCheckBox->isChecked();
+}
+
+QString OpenConnectionDialog::getSshHostname()
+{
+    return ui->sshHostnameEdit->text();
+}
+
+QString OpenConnectionDialog::getSshUsername()
+{
+    return ui->sshUsernameEdit->text();
+}
+
+QString OpenConnectionDialog::getSshPassword()
+{
+    return ui->sshPasswordEdit->text();
+}
+
+int OpenConnectionDialog::getSshPort()
+{
+    return ui->sshPortSpinBox->text().toInt();
+}
+
 void OpenConnectionDialog::on_driverCombo_currentIndexChanged(const QString &arg1)
 {
     // Disable fields if using SQLite
@@ -107,43 +129,46 @@ void OpenConnectionDialog::on_fileButton_clicked()
 
 void OpenConnectionDialog::on_addButton_clicked()
 {
-    // Add connection from settings to list
-    SavedConnection *newConnection = new SavedConnection;
-    newConnection->name = getName();
-    newConnection->database = getDatabase();
-    newConnection->driver = getDriver();
-    newConnection->hostname = getHostname();
-    newConnection->username = getUsername();
-    newConnection->password = getPassword();
-    newConnection->port = getPort();
-
-    // Append to saved connections
-    savedConnections.append(newConnection);
-
-    // Save connections
-    QSettings settings;
-    settings.beginWriteArray("connections");
-
-    int i = 0;
-    foreach(SavedConnection* connection, savedConnections)
-    {
-        settings.setArrayIndex(i);
-
+    // Only add connection if there's actually text there
+    if (getName().length()) {
         // Add connection from settings to list
-        settings.setValue("name", connection->name);
-        settings.setValue("database", connection->database);
-        settings.setValue("driver", connection->driver);
-        settings.setValue("hostname", connection->hostname);
-        settings.setValue("username", connection->username);
-        settings.setValue("password", connection->password);
-        settings.setValue("port", connection->port);
+        SavedConnection *newConnection = new SavedConnection;
+        newConnection->name = getName();
+        newConnection->database = getDatabase();
+        newConnection->driver = getDriver();
+        newConnection->hostname = getHostname();
+        newConnection->username = getUsername();
+        newConnection->password = getPassword();
+        newConnection->port = getPort();
 
-        i++;
+        // Append to saved connections
+        savedConnections.append(newConnection);
+
+        // Save connections
+        QSettings settings;
+        settings.beginWriteArray("connections");
+
+        int i = 0;
+        foreach(SavedConnection* connection, savedConnections)
+        {
+            settings.setArrayIndex(i);
+
+            // Add connection from settings to list
+            settings.setValue("name", connection->name);
+            settings.setValue("database", connection->database);
+            settings.setValue("driver", connection->driver);
+            settings.setValue("hostname", connection->hostname);
+            settings.setValue("username", connection->username);
+            settings.setValue("password", connection->password);
+            settings.setValue("port", connection->port);
+
+            i++;
+        }
+        settings.endArray();
+
+        // Reload connections widget
+        reloadConnections();
     }
-    settings.endArray();
-
-    // Reload connections widget
-    reloadConnections();
 }
 
 void OpenConnectionDialog::on_connectionsListWidget_itemActivated(QListWidgetItem *item)
@@ -152,10 +177,6 @@ void OpenConnectionDialog::on_connectionsListWidget_itemActivated(QListWidgetIte
 
     QList<SavedConnection*>::iterator i;
     for (i = savedConnections.begin(); i != savedConnections.end(); ++i) {
-        if (item->text() == "-- New Connection --") {
-            connection = new SavedConnection;
-            break;
-        }
 
         if ((*i)->name == item->text()) {
             connection = *i;
@@ -180,9 +201,6 @@ void OpenConnectionDialog::reloadConnections()
 
     // Clear out the list widget
     ui->connectionsListWidget->clear();
-
-    // Add a new connection by default
-    ui->connectionsListWidget->addItem("-- New Connection --");
 
     // Load saved connections
     QSettings settings;
@@ -214,40 +232,60 @@ void OpenConnectionDialog::on_removeButton_clicked()
     // Get current item
     QListWidgetItem *item = ui->connectionsListWidget->currentItem();
 
-    QList<SavedConnection*>::iterator i;
-    for (i = savedConnections.begin(); i != savedConnections.end(); ++i) {
-        if (item->text() == "-- New Connection --") {
-            break;
+    if (item) {
+        QList<SavedConnection*>::iterator i;
+        for (i = savedConnections.begin(); i != savedConnections.end(); ++i) {
+            if (item->text() == "-- New Connection --") {
+                break;
+            }
+
+            if ((*i)->name == item->text()) {
+                savedConnections.removeOne(*i);
+                break;
+            }
         }
 
-        if ((*i)->name == item->text()) {
-            savedConnections.removeOne(*i);
-            break;
+        // Save connections
+        QSettings settings;
+        settings.beginWriteArray("connections");
+
+        int j = 0;
+        foreach(SavedConnection* connection, savedConnections)
+        {
+            settings.setArrayIndex(j);
+
+            // Add connection from settings to list
+            settings.setValue("name", connection->name);
+            settings.setValue("database", connection->database);
+            settings.setValue("driver", connection->driver);
+            settings.setValue("hostname", connection->hostname);
+            settings.setValue("username", connection->username);
+            settings.setValue("password", connection->password);
+            settings.setValue("port", connection->port);
+
+            j++;
         }
+        settings.endArray();
+
+        // Reload connections widget
+        reloadConnections();
     }
+}
 
-    // Save connections
-    QSettings settings;
-    settings.beginWriteArray("connections");
+void OpenConnectionDialog::on_newConnectionButton_clicked()
+{
+    SavedConnection *connection = new SavedConnection;
+    int driver = ui->driverCombo->findText(connection->driver);
+    ui->driverCombo->setCurrentIndex(driver);
+    ui->databaseEdit->setText(connection->database);
+    ui->usernameEdit->setText(connection->username);
+    ui->passwordEdit->setText(connection->password);
+    ui->hostnameEdit->setText(connection->hostname);
+    ui->portSpinBox->setValue(connection->port);
+}
 
-    int j = 0;
-    foreach(SavedConnection* connection, savedConnections)
-    {
-        settings.setArrayIndex(j);
-
-        // Add connection from settings to list
-        settings.setValue("name", connection->name);
-        settings.setValue("database", connection->database);
-        settings.setValue("driver", connection->driver);
-        settings.setValue("hostname", connection->hostname);
-        settings.setValue("username", connection->username);
-        settings.setValue("password", connection->password);
-        settings.setValue("port", connection->port);
-
-        j++;
-    }
-    settings.endArray();
-
-    // Reload connections widget
-    reloadConnections();
+void OpenConnectionDialog::on_sshTunnelCheckBox_toggled(bool checked)
+{
+    ui->sshGroupBox->setEnabled(checked);
+    ui->sshGroupBox->setVisible(checked);
 }
