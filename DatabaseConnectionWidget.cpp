@@ -43,15 +43,13 @@ QSqlError DatabaseConnectionWidget::lastError()
     return m_database.lastError();
 }
 
-bool DatabaseConnectionWidget::createSshTunnel(QString username, QString password, QString host, int remotePort, int localPort)
+bool DatabaseConnectionWidget::createSshTunnel(QString hostname, int remotePort, int localPort)
 {
-    //-fNg -L 16111:127.0.0.1:3306 forge@www.aussieindoorsports.com.au
-
-    // Compile Arguments
+    // Compile Arguments (of the form: -fNg -L 16111:127.0.0.1:3306 user@www.hostname.com
     QStringList arguments;
-    arguments << "-fNg" << QString(QString::number(localPort) + ":" + "127.0.0.1" + ":" + QString::number(remotePort)) << QString(username + "@" + host);
+    arguments << "-fNg" << "-L" << QString(QString::number(localPort) + ":" + "127.0.0.1" + ":" + QString::number(remotePort)) << QString(hostname);
 
-    // Execute SSH command
+    // Execute SSH Command
     m_sshTunnel.start("ssh", arguments);
 
     // Wait until finished
@@ -59,8 +57,14 @@ bool DatabaseConnectionWidget::createSshTunnel(QString username, QString passwor
         return false;
     }
 
-    //  Check for exit code
-    qDebug() << "SSH tunnel binded to 127.0.0.1:" << localPort << m_sshTunnel.exitCode();
+    // If SSH returned an error
+    if (m_sshTunnel.exitCode()) {
+        qDebug() << m_sshTunnel.exitCode() << m_sshTunnel.readAll();
+        return false;
+    }
+
+    //  Print useful information
+    qDebug() << QString("SSH tunnel binded to 127.0.0.1:" + QString::number(localPort));
 
     return true;
 }

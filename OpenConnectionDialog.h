@@ -21,9 +21,8 @@ struct SavedConnection
     int port;
 
     // SSH Tunnel Settings
+    bool sshTunnel;
     QString sshHostname;
-    QString sshUsername;
-    QString sshPassword;
     int sshPort;
 };
 
@@ -46,8 +45,6 @@ public:
     // SSH Tunnel Functions
     bool    getSshTunnelChecked();
     QString getSshHostname();
-    QString getSshUsername();
-    QString getSshPassword();
     int     getSshPort();
 
 

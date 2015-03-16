@@ -34,7 +34,13 @@ OpenConnectionDialog::~OpenConnectionDialog()
 QString OpenConnectionDialog::getName()
 {
     if (getDriver() == "QMYSQL" || getDriver() == "QMYSQL3") {
-        return QString(getDatabase() + " - " + getUsername() + "@" + getHostname() + ":" + QString::number(getPort()));
+        QString name = getDatabase() + " - " + getUsername() + "@" + getHostname() + ":" + QString::number(getPort());
+
+        if (getSshTunnelChecked()) {
+            name += " (" + getSshHostname() + ":" + QString::number(getSshPort()) + ")";
+        }
+
+        return name;
     }
 
     QUrl url(ui->databaseEdit->text());
@@ -82,16 +88,6 @@ QString OpenConnectionDialog::getSshHostname()
     return ui->sshHostnameEdit->text();
 }
 
-QString OpenConnectionDialog::getSshUsername()
-{
-    return ui->sshUsernameEdit->text();
-}
-
-QString OpenConnectionDialog::getSshPassword()
-{
-    return ui->sshPasswordEdit->text();
-}
-
 int OpenConnectionDialog::getSshPort()
 {
     return ui->sshPortSpinBox->text().toInt();
@@ -106,16 +102,18 @@ void OpenConnectionDialog::on_driverCombo_currentIndexChanged(const QString &arg
         ui->passwordEdit->setEnabled(false);
         ui->hostnameEdit->setEnabled(false);
         ui->portSpinBox->setEnabled(false);
+        ui->sshTunnelCheckBox->setEnabled(false);
     }
 
     // Enable all fields if using MySQL
-    else if (arg1 == "QMYSQL" || arg1 == "QMYSQL3") {
+    else {
         ui->fileButton->setEnabled(false);
         ui->usernameEdit->setEnabled(true);
         ui->passwordEdit->setEnabled(true);
         ui->hostnameEdit->setEnabled(true);
         ui->portSpinBox->setEnabled(true);
         ui->portSpinBox->setValue(3306);
+        ui->sshTunnelCheckBox->setEnabled(true);
     }
 }
 
@@ -140,6 +138,9 @@ void OpenConnectionDialog::on_addButton_clicked()
         newConnection->username = getUsername();
         newConnection->password = getPassword();
         newConnection->port = getPort();
+        newConnection->sshTunnel = getSshTunnelChecked();
+        newConnection->sshHostname = getSshHostname();
+        newConnection->sshPort = getSshPort();
 
         // Append to saved connections
         savedConnections.append(newConnection);
@@ -161,7 +162,9 @@ void OpenConnectionDialog::on_addButton_clicked()
             settings.setValue("username", connection->username);
             settings.setValue("password", connection->password);
             settings.setValue("port", connection->port);
-
+            settings.setValue("sshTunnel", connection->sshTunnel);
+            settings.setValue("sshHostname", connection->sshHostname);
+            settings.setValue("sshPort", connection->sshPort);
             i++;
         }
         settings.endArray();
@@ -191,6 +194,9 @@ void OpenConnectionDialog::on_connectionsListWidget_itemActivated(QListWidgetIte
     ui->passwordEdit->setText(connection->password);
     ui->hostnameEdit->setText(connection->hostname);
     ui->portSpinBox->setValue(connection->port);
+    ui->sshTunnelCheckBox->setChecked(connection->sshTunnel);
+    ui->sshHostnameEdit->setText(connection->sshHostname);
+    ui->sshPortSpinBox->setValue(connection->sshPort);
 }
 
 void OpenConnectionDialog::reloadConnections()
@@ -217,6 +223,9 @@ void OpenConnectionDialog::reloadConnections()
         connection->username = settings.value("username").toString();
         connection->password = settings.value("password").toString();
         connection->port = settings.value("port").toInt();
+        connection->sshTunnel = settings.value("sshTunnel").toBool();
+        connection->sshHostname = settings.value("sshHostname").toString();
+        connection->sshPort = settings.value("sshPort").toInt();
 
         // Append to saved connections
         savedConnections.append(connection);
@@ -262,6 +271,9 @@ void OpenConnectionDialog::on_removeButton_clicked()
             settings.setValue("username", connection->username);
             settings.setValue("password", connection->password);
             settings.setValue("port", connection->port);
+            settings.setValue("sshTunnel", connection->sshTunnel);
+            settings.setValue("sshHostname", connection->sshHostname);
+            settings.setValue("sshPort", connection->sshPort);
 
             j++;
         }
@@ -282,10 +294,16 @@ void OpenConnectionDialog::on_newConnectionButton_clicked()
     ui->passwordEdit->setText(connection->password);
     ui->hostnameEdit->setText(connection->hostname);
     ui->portSpinBox->setValue(connection->port);
+    ui->sshTunnelCheckBox->setChecked(false);
 }
 
 void OpenConnectionDialog::on_sshTunnelCheckBox_toggled(bool checked)
 {
     ui->sshGroupBox->setEnabled(checked);
     ui->sshGroupBox->setVisible(checked);
+    ui->hostnameEdit->setReadOnly(checked);
+
+    if (checked) {
+        ui->hostnameEdit->setText("127.0.0.1");
+    }
 }

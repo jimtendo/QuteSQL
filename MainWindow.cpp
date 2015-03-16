@@ -35,30 +35,19 @@ void MainWindow::on_actionNew_Connection_triggered()
     // Show the dialog and wait for user input
     if (connectionDialog.exec() == QDialog::Accepted) {
 
-        // Get information from widget
-        QString name = connectionDialog.getName();
-        QString driver = connectionDialog.getDriver();
-        QString hostname = connectionDialog.getHostname();
-        QString database = connectionDialog.getDatabase();
-        QString username = connectionDialog.getUsername();
-        QString password = connectionDialog.getPassword();
-        int port = connectionDialog.getPort();
-
         // Create a new database connection widget
         DatabaseConnectionWidget *databaseConnectionWidget = new DatabaseConnectionWidget(this);
+
+        // Get SSH Tunnel information from dialog
+        QString sshHostname = connectionDialog.getSshHostname();
+        int sshPort = connectionDialog.getSshPort();
+        int sshForwardedPort = qrand() % 1000 + 17000; // Get a random port to forward to between 17000 and 18000
 
         // If we want this to be SSH tunneled
         if (connectionDialog.getSshTunnelChecked()) {
 
-            // Get SSH information from dialog
-            QString sshHostname = connectionDialog.getSshHostname();
-            QString sshUsername = connectionDialog.getSshUsername();
-            QString sshPassword = connectionDialog.getSshPassword();
-            int sshPort = connectionDialog.getSshPort();
-            int sshForwardedPort = qrand() % 1000 + 17000; // Get a random port to forward to between 17000 and 18000
-
             // Try to create the tunnel
-            if (!databaseConnectionWidget->createSshTunnel(sshUsername, sshPassword, sshHostname, sshPort, sshForwardedPort)) {
+            if (!databaseConnectionWidget->createSshTunnel(sshHostname, sshPort, sshForwardedPort)) {
 
                 // Show message box if we couldn't connect
                 QMessageBox::critical(this, "Error", "Could not create SSH Tunnel");
@@ -73,6 +62,15 @@ void MainWindow::on_actionNew_Connection_triggered()
                 return;
             }
         }
+
+        // Get database information from dialog
+        QString name = connectionDialog.getName();
+        QString driver = connectionDialog.getDriver();
+        QString hostname = connectionDialog.getHostname();
+        QString database = connectionDialog.getDatabase();
+        QString username = connectionDialog.getUsername();
+        QString password = connectionDialog.getPassword();
+        int port = connectionDialog.getSshTunnelChecked() ? sshForwardedPort : connectionDialog.getPort();
 
         // Connect to database
         if (!databaseConnectionWidget->connectToDatabase(name, driver, hostname, database, username, password, port)) {

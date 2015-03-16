@@ -24,7 +24,7 @@ public:
 
     QString name();
 
-    bool createSshTunnel(QString username, QString password, QString host, int remotePort, int localPort);
+    bool createSshTunnel(QString hostname, int remotePort, int localPort);
 
     bool connectToDatabase(QString name, QString driver, QString host, QString database, QString username, QString password, int port = 0);
 
