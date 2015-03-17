@@ -8,7 +8,7 @@ QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = QuteSQL
+TARGET = qutesql
 TEMPLATE = app
 
 
@@ -46,3 +46,10 @@ FORMS    += MainWindow.ui \
     BrowseWidget.ui \
     SchemaWidget.ui \
     Extension/MySQLTools.ui
+
+target.path = /usr/bin
+
+desktop.path = /usr/share/applications/
+desktop.files += $${TARGET}.desktop
+
+INSTALLS += target desktop

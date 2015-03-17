@@ -7,6 +7,7 @@
 #include <QtSql/QSqlDatabase>
 #include <QSettings>
 #include <QToolBar>
+#include <QTime>
 
 #include "OpenConnectionDialog.h"
 #include "DatabaseConnectionWidget.h"

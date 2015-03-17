@@ -2,6 +2,7 @@
 #include "ui_DatabaseConnectionWidget.h"
 
 #include <QUrl>
+#include <QThread>
 #include <QDebug>
 
 #include "Extension/MySQLExtension.h"
@@ -17,6 +18,9 @@ DatabaseConnectionWidget::DatabaseConnectionWidget(QWidget *parent) :
 
 DatabaseConnectionWidget::~DatabaseConnectionWidget()
 {
+    // Close the ssh tunnel
+    m_sshTunnel.terminate();
+
     // Close this connection
     m_database.close();
 
@@ -53,7 +57,7 @@ bool DatabaseConnectionWidget::createSshTunnel(QString hostname, int remotePort,
     m_sshTunnel.start("ssh", arguments);
 
     // Wait until finished
-    if (!m_sshTunnel.waitForFinished()) {
+    if (!m_sshTunnel.waitForStarted(5000)) {
         return false;
     }
 
@@ -64,6 +68,7 @@ bool DatabaseConnectionWidget::createSshTunnel(QString hostname, int remotePort,
     }
 
     //  Print useful information
+    qDebug() << m_sshTunnel.exitCode() << m_sshTunnel.readAllStandardError();
     qDebug() << QString("SSH tunnel binded to 127.0.0.1:" + QString::number(localPort));
 
     return true;
