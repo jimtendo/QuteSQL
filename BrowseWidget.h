@@ -24,6 +24,14 @@ public:
 private slots:
     void on_filterButton_clicked();
 
+    void on_removeButton_clicked();
+
+    void on_addButton_clicked();
+
+    void on_clearButton_clicked();
+
+    void commitChanges();
+
 private:
     Ui::BrowseWidget *ui;
 

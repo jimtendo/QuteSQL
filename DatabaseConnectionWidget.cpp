@@ -54,9 +54,14 @@ bool DatabaseConnectionWidget::createSshTunnel(QString hostname, int remotePort,
     arguments << "-fNg" << "-L" << QString(QString::number(localPort) + ":" + "127.0.0.1" + ":" + QString::number(remotePort)) << QString(hostname);
 
     // Execute SSH Command
-    m_sshTunnel.start("ssh", arguments);
+    //m_sshTunnel.start("ssh", arguments);
+    QProcess::startDetached("ssh", arguments);
 
-    // Wait until finished
+    for (int i = 0; i < 500000; i++) {
+        qDebug() << i;
+    }
+
+    /*// Wait until finished
     if (!m_sshTunnel.waitForStarted(5000)) {
         return false;
     }
@@ -69,7 +74,7 @@ bool DatabaseConnectionWidget::createSshTunnel(QString hostname, int remotePort,
 
     //  Print useful information
     qDebug() << m_sshTunnel.exitCode() << m_sshTunnel.readAllStandardError();
-    qDebug() << QString("SSH tunnel binded to 127.0.0.1:" + QString::number(localPort));
+    qDebug() << QString("SSH tunnel binded to 127.0.0.1:" + QString::number(localPort));*/
 
     return true;
 }

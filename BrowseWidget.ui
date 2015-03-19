@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="3">
+   <item row="0" column="0" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QLabel" name="label">
@@ -57,13 +57,15 @@
         <string>Go!</string>
        </property>
        <property name="icon">
-        <iconset theme="dialog-ok-apply"/>
+        <iconset theme="dialog-ok-apply">
+         <normaloff/>
+        </iconset>
        </property>
       </widget>
      </item>
     </layout>
    </item>
-   <item row="1" column="0" colspan="3">
+   <item row="1" column="0" colspan="4">
     <widget class="QTableView" name="tableView">
      <property name="enabled">
       <bool>false</bool>
@@ -71,6 +73,16 @@
     </widget>
    </item>
    <item row="2" column="0">
+    <widget class="QPushButton" name="clearButton">
+     <property name="text">
+      <string>Clear</string>
+     </property>
+     <property name="icon">
+      <iconset theme="edit-clear"/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -83,8 +95,8 @@
      </property>
     </spacer>
    </item>
-   <item row="2" column="1">
-    <widget class="QPushButton" name="pushButton">
+   <item row="2" column="2">
+    <widget class="QPushButton" name="addButton">
      <property name="text">
       <string>Add</string>
      </property>
@@ -95,8 +107,8 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QPushButton" name="pushButton_2">
+   <item row="2" column="3">
+    <widget class="QPushButton" name="removeButton">
      <property name="text">
       <string>Remove</string>
      </property>
