@@ -8,7 +8,7 @@
 #include <QSqlField>
 #include <QSqlError>
 
-#include "InsertRowDialog.h"
+#include <QMessageBox>
 
 BrowseWidget::BrowseWidget(QWidget *parent) :
     QWidget(parent),
@@ -110,6 +110,11 @@ void BrowseWidget::commitChanges()
     // Submit all previous changes
     if (m_model->isDirty()) {
         m_model->submitAll();
+
+        // Check if there was an error and display it if there was
+        if (m_model->lastError().type() != QSqlError::NoError) {
+            QMessageBox::critical(this, "Operation failed", m_model->lastError().text());
+        }
     }
 
     // Revert back to OnFieldChange
