@@ -30,6 +30,8 @@ private slots:
 
     void on_clearButton_clicked();
 
+    void currentChanged(QModelIndex previous, QModelIndex current);
+
     void commitChanges();
 
 private:

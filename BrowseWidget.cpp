@@ -21,9 +21,7 @@ BrowseWidget::BrowseWidget(QWidget *parent) :
 BrowseWidget::~BrowseWidget()
 {
     // Delete the model
-    if (m_model) {
-        delete m_model;
-    }
+    if (m_model) delete m_model;
 
     // Delete the user interface
     delete ui;
@@ -59,9 +57,6 @@ bool BrowseWidget::setTable(QString table)
     ui->filterEdit->setEnabled(true);
     ui->filterButton->setEnabled(true);
 
-    // Make sure we save changes when moving to a new row (this is necessary so "Add" works)
-    connect(ui->tableView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(commitChanges()));
-
     return true;
 }
 
@@ -94,15 +89,27 @@ void BrowseWidget::on_addButton_clicked()
 
     // Insert the row
     m_model->insertRecord(-1, newRecord);
+
+    // Select the newly inserted row
+    ui->tableView->selectRow(m_model->rowCount()-1);
+
+    // Make sure we save changes when moving to a new row (this is necessary so "Add" works)
+    connect(ui->tableView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(currentChanged(QModelIndex,QModelIndex)));
 }
 
 void BrowseWidget::on_clearButton_clicked()
 {
-    // Remove all rows
-    m_model->removeRows(1, m_model->rowCount()-1);
+    // Display messagebox for confirmation
+    if (QMessageBox::Yes == QMessageBox::question(this, "Clear Table", "Are you sure you want to clear this table?\n\nThis action cannot be undone.")) {
 
-    // Refresh browse widget
-    m_model->select();
+        // Remove all rows TODO make more efficient
+        for (int i = 0; i < m_model->rowCount(); i++) {
+            m_model->removeRow(i);
+        }
+
+        // Refresh browse widget
+        m_model->select();
+    }
 }
 
 void BrowseWidget::commitChanges()
@@ -116,7 +123,20 @@ void BrowseWidget::commitChanges()
             QMessageBox::critical(this, "Operation failed", m_model->lastError().text());
         }
     }
+}
 
-    // Revert back to OnFieldChange
-    //m_model->setEditStrategy(QSqlTableModel::OnFieldChange);
+void BrowseWidget::currentChanged(QModelIndex previous, QModelIndex current)
+{
+    // If the row has changed, commit changes
+    if (previous.row() != current.row()) {
+
+        // Commit changes
+        commitChanges();
+
+        // There's no reason to call this anymore, we don't need to know if the row has changed
+        disconnect(ui->tableView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), this, SLOT(currentChanged(QModelIndex,QModelIndex)));
+
+        // Revert back to OnFieldChange
+        m_model->setEditStrategy(QSqlTableModel::OnFieldChange);
+    }
 }

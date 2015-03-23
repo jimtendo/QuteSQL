@@ -12,13 +12,13 @@ MySQLExtension::MySQLExtension(QObject *parent, QSqlDatabase *database) :
     Extension(parent, database)
 {
     // Backup actions
-    m_backupAction = new QAction(QIcon::fromTheme("filesave"), QT_TR_NOOP("&Backup..."), &m_toolsToolBar);
-    m_backupAction->setStatusTip(QT_TR_NOOP("Backup database to file"));
+    m_backupAction = new QAction(QIcon::fromTheme("document-export"), QT_TR_NOOP("&Export..."), &m_toolsToolBar);
+    m_backupAction->setStatusTip(QT_TR_NOOP("Export database"));
     connect(m_backupAction, SIGNAL(triggered()), &m_toolsWidget, SLOT(on_backupDatabaseButton_clicked()));
 
     // Restore actions
-    m_restoreAction = new QAction(QIcon::fromTheme("fileopen"), QT_TR_NOOP("&Restore..."), &m_toolsToolBar);
-    m_restoreAction->setStatusTip(QT_TR_NOOP("Restore database to file"));
+    m_restoreAction = new QAction(QIcon::fromTheme("document-import"), QT_TR_NOOP("&Import..."), &m_toolsToolBar);
+    m_restoreAction->setStatusTip(QT_TR_NOOP("Import Database"));
     connect(m_restoreAction, SIGNAL(triggered()), &m_toolsWidget, SLOT(on_restoreDatabaseButton_clicked()));
 
     // Clear actions
