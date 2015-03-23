@@ -14,10 +14,16 @@ SqlWidget::SqlWidget(QWidget *parent) :
     ui(new Ui::SqlWidget)
 {
     ui->setupUi(this);
+
+    // Attach SQL Highlighter
+    m_highlighter = new SQLHighlighter(ui->sqlEdit->document());
 }
 
 SqlWidget::~SqlWidget()
 {
+    // Delete highlighter
+    delete m_highlighter;
+
     delete ui;
 }
 

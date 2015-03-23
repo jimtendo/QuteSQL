@@ -5,6 +5,8 @@
 #include <QSqlDatabase>
 #include <QSqlQueryModel>
 
+#include "SQLHighlighter.h"
+
 namespace Ui {
 class QueryWidget;
 }
@@ -35,6 +37,9 @@ private:
 
     // Model for query
     QSqlQueryModel *m_model;
+
+    // Highlighter for SQL Code
+    SQLHighlighter *m_highlighter;
 };
 
 #endif // QUERYWIDGET_H

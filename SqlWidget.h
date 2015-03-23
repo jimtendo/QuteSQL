@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QSqlDatabase>
 
+#include "SQLHighlighter.h"
+
 namespace Ui {
 class SqlWidget;
 }
@@ -30,6 +32,9 @@ private:
     Ui::SqlWidget *ui;
 
     QSqlDatabase m_database;
+
+    // Highlighter for SQL Code
+    SQLHighlighter *m_highlighter;
 };
 
 #endif // SQLWIDGET_H

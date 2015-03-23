@@ -2,6 +2,9 @@
 #include "ui_ExplorerWidget.h"
 
 #include <QListWidgetItem>
+#include <QMessageBox>
+#include <QSqlQuery>
+#include <QSqlError>
 
 ExplorerWidget::ExplorerWidget(QWidget *parent) :
     QWidget(parent),
@@ -45,4 +48,25 @@ void ExplorerWidget::on_tableListWidget_itemActivated(QListWidgetItem *item)
 {
     ui->browseTab->setTable(item->text());
     ui->schemaTab->setTable(item->text());
+}
+
+void ExplorerWidget::on_removeButton_clicked()
+{
+    // Display messagebox for confirmation
+    if (QMessageBox::Yes == QMessageBox::question(this, "Drop Table", "Are you sure you want to drop this table?")) {
+
+        // Get table name
+        QString table = ui->tableListWidget->currentItem()->text();
+
+        // Run the drop query
+        QSqlQuery query = m_database->exec("DROP TABLE " + table);
+
+        // Check if there was an error and display it if there was
+        if (query.lastError().type() != QSqlError::NoError) {
+            QMessageBox::critical(this, "Operation failed", query.lastError().text());
+        }
+
+        // Refresh explorer
+        refresh();
+    }
 }

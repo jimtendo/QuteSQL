@@ -25,6 +25,8 @@ public slots:
 private slots:
     void on_tableListWidget_itemActivated(QListWidgetItem *item);
 
+    void on_removeButton_clicked();
+
 private:
     Ui::ExplorerWidget *ui;
 

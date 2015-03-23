@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     SchemaWidget.cpp \
     Extension/MySQLExtension.cpp \
     Extension/Extension.cpp \
-    Extension/MySQLTools.cpp
+    Extension/MySQLTools.cpp \
+    SQLHighlighter.cpp
 
 HEADERS  += MainWindow.h \
     DatabaseConnectionWidget.h \
@@ -35,7 +36,8 @@ HEADERS  += MainWindow.h \
     SchemaWidget.h \
     Extension/Extension.h \
     Extension/MySQLExtension.h \
-    Extension/MySQLTools.h
+    Extension/MySQLTools.h \
+    SQLHighlighter.h
 
 FORMS    += MainWindow.ui \
     DatabaseConnectionWidget.ui \

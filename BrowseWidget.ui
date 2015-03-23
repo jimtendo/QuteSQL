@@ -74,11 +74,16 @@
    </item>
    <item row="2" column="0">
     <widget class="QPushButton" name="clearButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Clear</string>
      </property>
      <property name="icon">
-      <iconset theme="edit-clear"/>
+      <iconset theme="edit-clear">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
    </item>
@@ -97,6 +102,9 @@
    </item>
    <item row="2" column="2">
     <widget class="QPushButton" name="addButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Add</string>
      </property>
@@ -109,6 +117,9 @@
    </item>
    <item row="2" column="3">
     <widget class="QPushButton" name="removeButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string>Remove</string>
      </property>

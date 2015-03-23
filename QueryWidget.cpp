@@ -11,10 +11,16 @@ QueryWidget::QueryWidget(QWidget *parent) :
 {
     // Setup UI
     ui->setupUi(this);
+
+    // Attach SQL Highlighter
+    m_highlighter = new SQLHighlighter(ui->queryEdit->document());
 }
 
 QueryWidget::~QueryWidget()
 {
+    // Delete highlighter
+    delete m_highlighter;
+
     // Delete UI
     delete ui;
 }

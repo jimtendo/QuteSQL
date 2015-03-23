@@ -57,6 +57,11 @@ bool BrowseWidget::setTable(QString table)
     ui->filterEdit->setEnabled(true);
     ui->filterButton->setEnabled(true);
 
+    // Enable Add/Remove/Clear
+    ui->addButton->setEnabled(true);
+    ui->removeButton->setEnabled(true);
+    ui->clearButton->setEnabled(true);
+
     return true;
 }
 
@@ -100,7 +105,7 @@ void BrowseWidget::on_addButton_clicked()
 void BrowseWidget::on_clearButton_clicked()
 {
     // Display messagebox for confirmation
-    if (QMessageBox::Yes == QMessageBox::question(this, "Clear Table", "Are you sure you want to clear this table?\n\nThis action cannot be undone.")) {
+    if (QMessageBox::Yes == QMessageBox::question(this, "Clear Table", "Are you sure you want to clear this table?")) {
 
         // Remove all rows TODO make more efficient
         for (int i = 0; i < m_model->rowCount(); i++) {
