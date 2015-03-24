@@ -5,6 +5,8 @@
 #include <QSqlDatabase>
 #include <QListWidgetItem>
 
+#include "Extension/Extension.h"
+
 namespace Ui {
 class ExplorerWidget;
 }
@@ -17,7 +19,7 @@ public:
     explicit ExplorerWidget(QWidget *parent = 0);
     ~ExplorerWidget();
 
-    void setDatabase(QSqlDatabase *database);
+    void init(QSqlDatabase *database, Extension *extension = NULL);
 
 public slots:
     void refresh();
@@ -27,11 +29,16 @@ private slots:
 
     void on_removeButton_clicked();
 
+    void on_addButton_clicked();
+
 private:
     Ui::ExplorerWidget *ui;
 
     // Database
     QSqlDatabase *m_database;
+
+    // Extension
+    Extension *m_extension;
 };
 
 #endif // EXPLORERWIDGET_H

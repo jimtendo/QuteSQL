@@ -93,17 +93,6 @@ bool DatabaseConnectionWidget::connectToDatabase(QString name, QString driver, Q
         return false;
     }
 
-    // Setup Explorer Widget
-    ui->explorerTab->setDatabase(&m_database);
-
-    // Setup Query Widget
-    ui->queryTab->setDatabase(&m_database);
-    connect(ui->queryTab, SIGNAL(refreshNeeded()), this, SLOT(refresh()));
-
-    // Setup SQL Widget
-    ui->sqlTab->setDatabase(m_database);
-    connect(ui->sqlTab, SIGNAL(refreshNeeded()), this, SLOT(refresh()));
-
     // If there's extra support for this driver, add it
     if (driver == "QMYSQL" || driver == "QMYSQL3") {
 
@@ -122,6 +111,17 @@ bool DatabaseConnectionWidget::connectToDatabase(QString name, QString driver, Q
             ui->tabWidget->addTab((*i)->getWidget(), (*i)->getIcon(), (*i)->getLabel());
         }
     }
+
+    // Setup Explorer Widget
+    ui->explorerTab->init(&m_database, m_extension);
+
+    // Setup Query Widget
+    ui->queryTab->setDatabase(&m_database);
+    connect(ui->queryTab, SIGNAL(refreshNeeded()), this, SLOT(refresh()));
+
+    // Setup SQL Widget
+    ui->sqlTab->setDatabase(m_database);
+    connect(ui->sqlTab, SIGNAL(refreshNeeded()), this, SLOT(refresh()));
 
     return true;
 }

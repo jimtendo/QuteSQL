@@ -39,6 +39,16 @@ Extension::~Extension()
 
 }
 
+int Extension::createTable(QString table)
+{
+    return false;
+}
+
+int Extension::removeTable(QString table)
+{
+    return false;
+}
+
 QList<ExtensionTab*> Extension::getTabs()
 {
     return m_tabs;

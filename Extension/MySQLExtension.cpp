@@ -7,6 +7,9 @@
 #include <QDir>
 #include <QProcess>
 #include <QMessageBox>
+#include <QInputDialog>
+#include <QSqlQuery>
+#include <QSqlError>
 
 MySQLExtension::MySQLExtension(QObject *parent, QSqlDatabase *database) :
     Extension(parent, database)
@@ -49,4 +52,20 @@ MySQLExtension::~MySQLExtension()
     delete m_clearAction;
     delete m_backupAction;
     delete m_restoreAction;
+}
+
+int MySQLExtension::createTable(QString table)
+{
+    // Run the drop query
+    QSqlQuery query = m_database->exec("CREATE TABLE " + table + "(id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id))");
+
+    return true;
+}
+
+int MySQLExtension::removeTable(QString table)
+{
+    // Run the drop query
+    QSqlQuery query = m_database->exec("DROP TABLE " + table);
+
+    return true;
 }

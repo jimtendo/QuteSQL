@@ -16,6 +16,9 @@ public:
     explicit MySQLExtension(QObject *parent = 0, QSqlDatabase *database = new QSqlDatabase());
     ~MySQLExtension();
 
+    int createTable(QString table);
+    int removeTable(QString table);
+
 private:
     ExtensionTab *m_toolsTab;
     QToolBar m_toolsToolBar;

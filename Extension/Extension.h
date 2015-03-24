@@ -31,6 +31,9 @@ public:
     explicit Extension(QObject *parent = 0, QSqlDatabase *database = new QSqlDatabase());
     ~Extension();
 
+    virtual int createTable(QString table);
+    virtual int removeTable(QString table);
+
     virtual QList<ExtensionTab*> getTabs();
     virtual QList<QToolBar*> getToolBars();
 

@@ -86,8 +86,10 @@ void BrowseWidget::on_removeButton_clicked()
 
 void BrowseWidget::on_addButton_clicked()
 {
-    // Set the edit model to not save
-    m_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    // Set the edit model to not save (only change if not already set, otherwise it crashes)
+    if (m_model->editStrategy() != QSqlTableModel::OnManualSubmit) {
+        m_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    }
 
     // Create a new record
     QSqlRecord newRecord;
