@@ -34,6 +34,8 @@ private slots:
 
     void commitChanges();
 
+    void on_saveAsButton_clicked();
+
 private:
     Ui::BrowseWidget *ui;
 

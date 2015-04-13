@@ -48,7 +48,7 @@ void MainWindow::on_actionNew_Connection_triggered()
         if (connectionDialog.getSshTunnelChecked()) {
 
             // Try to create the tunnel
-            if (!databaseConnectionWidget->createSshTunnel(sshHostname, sshPort, sshForwardedPort)) {
+            if (!databaseConnectionWidget->createSshTunnel(sshHostname, connectionDialog.getPort(), sshForwardedPort)) {
 
                 // Show message box if we couldn't connect
                 QMessageBox::critical(this, "Error", "Could not create SSH Tunnel");

@@ -22,22 +22,49 @@
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QPushButton" name="backupDatabaseButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Backup Database</string>
+        </property>
+        <property name="icon">
+         <iconset theme="document-export"/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="restoreDatabaseButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Restore Database</string>
+        </property>
+        <property name="icon">
+         <iconset theme="document-import"/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="clearDatabaseButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Clear Database</string>
+        </property>
+        <property name="icon">
+         <iconset theme="edit-clear"/>
         </property>
        </widget>
       </item>

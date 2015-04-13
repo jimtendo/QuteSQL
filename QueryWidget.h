@@ -26,6 +26,8 @@ private slots:
 
     void on_clearButton_clicked();
 
+    void on_exportButton_clicked();
+
 signals:
     void refreshNeeded();
 

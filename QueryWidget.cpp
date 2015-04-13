@@ -5,6 +5,8 @@
 #include <QSqlQueryModel>
 #include <QSqlError>
 
+#include "ExportSelectionDialog.h"
+
 QueryWidget::QueryWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QueryWidget)
@@ -42,10 +44,14 @@ void QueryWidget::on_runButton_clicked()
     // Check for errors
     if (m_model->lastError().type() != QSqlError::NoError) {
         QMessageBox::critical(this, "Could not execute query", m_model->lastError().text());
+        return;
     }
 
     // Attach the result table to the model
     ui->resultTableView->setModel(m_model);
+
+    // Enable button
+    ui->exportButton->setEnabled(true);
 
     // Signal that a refresh is needed
     emit refreshNeeded();
@@ -55,4 +61,16 @@ void QueryWidget::on_clearButton_clicked()
 {
     // Clear the query text
     ui->queryEdit->clear();
+}
+
+void QueryWidget::on_exportButton_clicked()
+{
+    // Create export selection dialog
+    ExportSelectionDialog exportSelectionDialog;
+
+    // Initialise the dialog
+    exportSelectionDialog.init(ui->resultTableView);
+
+    // Execute the dialog
+    exportSelectionDialog.exec();
 }

@@ -55,6 +55,19 @@
    <item>
     <widget class="QTableView" name="resultTableView"/>
    </item>
+   <item>
+    <widget class="QPushButton" name="exportButton">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Export Results</string>
+     </property>
+     <property name="icon">
+      <iconset theme="filesave"/>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

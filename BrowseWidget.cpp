@@ -10,6 +10,8 @@
 
 #include <QMessageBox>
 
+#include "ExportSelectionDialog.h"
+
 BrowseWidget::BrowseWidget(QWidget *parent) :
     QWidget(parent),
     m_model(NULL),
@@ -57,10 +59,11 @@ bool BrowseWidget::setTable(QString table)
     ui->filterEdit->setEnabled(true);
     ui->filterButton->setEnabled(true);
 
-    // Enable Add/Remove/Clear
+    // Enable Add/Remove/Clear/SaveAs
     ui->addButton->setEnabled(true);
     ui->removeButton->setEnabled(true);
     ui->clearButton->setEnabled(true);
+    ui->saveAsButton->setEnabled(true);
 
     return true;
 }
@@ -146,4 +149,16 @@ void BrowseWidget::currentChanged(QModelIndex previous, QModelIndex current)
         // Revert back to OnFieldChange
         m_model->setEditStrategy(QSqlTableModel::OnFieldChange);
     }
+}
+
+void BrowseWidget::on_saveAsButton_clicked()
+{
+    // Create export selection dialog
+    ExportSelectionDialog exportSelectionDialog;
+
+    // Initialise the dialog
+    exportSelectionDialog.init(ui->tableView);
+
+    // Execute the dialog
+    exportSelectionDialog.exec();
 }
