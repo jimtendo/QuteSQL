@@ -40,6 +40,15 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="toolTip">
+        <string extracomment="The filter is a SQL WHERE clause without the keyword WHERE (for example, name='Josephine').">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The filter is a SQL WHERE clause without the keyword WHERE (for example, name='Josephine').&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="statusTip">
+        <string extracomment="The filter is a SQL WHERE clause without the keyword WHERE (for example, name='Josephine')."/>
+       </property>
+       <property name="whatsThis">
+        <string extracomment="The filter is a SQL WHERE clause without the keyword WHERE (for example, name='Josephine')."/>
+       </property>
       </widget>
      </item>
      <item>
@@ -124,7 +133,9 @@
       <string>Export Table</string>
      </property>
      <property name="icon">
-      <iconset theme="filesave"/>
+      <iconset theme="filesave">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
    </item>

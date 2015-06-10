@@ -39,6 +39,9 @@ private:
 
     // Extension
     Extension *m_extension;
+
+    // Schema Widget
+    SchemaWidget *m_schemaWidget;
 };
 
 #endif // EXPLORERWIDGET_H

@@ -1,5 +1,6 @@
 #include "MySQLExtension.h"
 #include "MySQLTools.h"
+#include "MySQLSchemaWidget.h"
 
 #include <QApplication>
 #include <QAction>
@@ -68,4 +69,9 @@ int MySQLExtension::removeTable(QString table)
     QSqlQuery query = m_database->exec("DROP TABLE " + table);
 
     return true;
+}
+
+SchemaWidget* MySQLExtension::createSchemaWidget(QWidget *parent)
+{
+    return new MySQLSchemaWidget(parent, m_database);
 }

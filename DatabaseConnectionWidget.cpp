@@ -51,13 +51,13 @@ bool DatabaseConnectionWidget::createSshTunnel(QString hostname, int remotePort,
 {
     // Compile Arguments (of the form: -fNg -L 16111:127.0.0.1:3306 user@www.hostname.com
     QStringList arguments;
-    arguments << "-Ng" << "-L" << QString(QString::number(forwardedPort) + ":" + "127.0.0.1" + ":" + QString::number(remotePort)) << QString(hostname) << "-p" << QString::number(sshPort);
+    arguments << "-fNg" << "-L" << QString(QString::number(forwardedPort) + ":" + "127.0.0.1" + ":" + QString::number(remotePort)) << QString(hostname) << "-p" << QString::number(sshPort);
 
     // Execute SSH Command
     m_sshTunnel.start("ssh", arguments);
 
     // Wait until finished
-    if (!m_sshTunnel.waitForStarted(5000)) {
+    if (!m_sshTunnel.waitForFinished(5000)) {
         return false;
     }
 

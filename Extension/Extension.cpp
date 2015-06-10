@@ -58,3 +58,8 @@ QList<QToolBar*> Extension::getToolBars()
 {
     return m_toolBars;
 }
+
+SchemaWidget * Extension::createSchemaWidget(QWidget *parent)
+{
+    return NULL;
+}

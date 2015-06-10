@@ -14,18 +14,21 @@ class SchemaWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit SchemaWidget(QWidget *parent = 0);
+    explicit SchemaWidget(QWidget *parent, QSqlDatabase *database);
     ~SchemaWidget();
 
-    void setDatabase(QSqlDatabase *database);
+    virtual void init();
 
-    bool setTable(QString table);
+    virtual bool setTable(QString table);
 
-private:
+protected:
     Ui::SchemaWidget *ui;
 
     // Database
     QSqlDatabase *m_database;
+
+    // Current table Name
+    QString m_tableName;
 
     // Model for query
     QSqlQueryModel *m_model;

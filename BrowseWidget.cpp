@@ -65,6 +65,10 @@ bool BrowseWidget::setTable(QString table)
     ui->clearButton->setEnabled(true);
     ui->saveAsButton->setEnabled(true);
 
+    // Neaten it up
+    ui->tableView->setSortingEnabled(true);
+    ui->tableView->setAlternatingRowColors(true);
+
     return true;
 }
 

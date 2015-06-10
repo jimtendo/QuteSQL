@@ -82,16 +82,6 @@
        <string>Browse</string>
       </attribute>
      </widget>
-     <widget class="SchemaWidget" name="schemaTab">
-      <attribute name="icon">
-       <iconset theme="document-edit">
-        <normaloff/>
-       </iconset>
-      </attribute>
-      <attribute name="title">
-       <string>Schema</string>
-      </attribute>
-     </widget>
     </widget>
    </item>
   </layout>
@@ -101,12 +91,6 @@
    <class>BrowseWidget</class>
    <extends>QWidget</extends>
    <header>BrowseWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>SchemaWidget</class>
-   <extends>QWidget</extends>
-   <header>SchemaWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

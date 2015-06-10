@@ -16,6 +16,10 @@ QueryWidget::QueryWidget(QWidget *parent) :
 
     // Attach SQL Highlighter
     m_highlighter = new SQLHighlighter(ui->queryEdit->document());
+
+    // Connect history's click with fill function
+    //connect(ui->queryHistoryWidget, SIGNAL())
+    connect(ui->savedQueryWidget, SIGNAL(addButtonClicked()), this, SLOT(saveQuery()));
 }
 
 QueryWidget::~QueryWidget()
@@ -47,6 +51,9 @@ void QueryWidget::on_runButton_clicked()
         return;
     }
 
+    // Add to history
+    ui->queryHistoryWidget->addQuery(ui->queryEdit->toPlainText());
+
     // Attach the result table to the model
     ui->resultTableView->setModel(m_model);
 
@@ -73,4 +80,9 @@ void QueryWidget::on_exportButton_clicked()
 
     // Execute the dialog
     exportSelectionDialog.exec();
+}
+
+void QueryWidget::saveQuery()
+{
+    ui->savedQueryWidget->addQuery(ui->queryEdit->toPlainText());
 }

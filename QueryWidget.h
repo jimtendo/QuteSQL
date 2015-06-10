@@ -28,6 +28,8 @@ private slots:
 
     void on_exportButton_clicked();
 
+    void saveQuery();
+
 signals:
     void refreshNeeded();
 

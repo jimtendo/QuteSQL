@@ -16,6 +16,8 @@ public:
     explicit MySQLExtension(QObject *parent = 0, QSqlDatabase *database = new QSqlDatabase());
     ~MySQLExtension();
 
+    SchemaWidget* createSchemaWidget(QWidget *parent);
+
     int createTable(QString table);
     int removeTable(QString table);
 

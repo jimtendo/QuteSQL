@@ -25,7 +25,10 @@ SOURCES += main.cpp\
     Extension/Extension.cpp \
     Extension/MySQLTools.cpp \
     SQLHighlighter.cpp \
-    ExportSelectionDialog.cpp
+    ExportSelectionDialog.cpp \
+    Extension/MySQLSchemaWidget.cpp \
+    QueryHistoryWidget.cpp \
+    SavedQueryWidget.cpp
 
 HEADERS  += MainWindow.h \
     DatabaseConnectionWidget.h \
@@ -39,7 +42,10 @@ HEADERS  += MainWindow.h \
     Extension/MySQLExtension.h \
     Extension/MySQLTools.h \
     SQLHighlighter.h \
-    ExportSelectionDialog.h
+    ExportSelectionDialog.h \
+    Extension/MySQLSchemaWidget.h \
+    QueryHistoryWidget.h \
+    SavedQueryWidget.h
 
 FORMS    += MainWindow.ui \
     DatabaseConnectionWidget.ui \
@@ -50,7 +56,9 @@ FORMS    += MainWindow.ui \
     BrowseWidget.ui \
     SchemaWidget.ui \
     Extension/MySQLTools.ui \
-    ExportSelectionDialog.ui
+    ExportSelectionDialog.ui \
+    QueryHistoryWidget.ui \
+    SavedQueryWidget.ui
 
 target.path = /usr/bin
 

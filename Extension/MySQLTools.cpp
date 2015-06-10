@@ -49,7 +49,7 @@ void MySQLTools::on_backupDatabaseButton_clicked()
     mysqldump.start("mysqldump", arguments);
 
     // Wait until finished
-    if (!mysqldump.waitForFinished()) {
+    if (!mysqldump.waitForFinished(240000)) {
 
         // Show message box if dump failed
         QMessageBox::critical(this, "Database Backup Failed", "Please ensure that you have mysqldump installed on this system.");
@@ -84,7 +84,7 @@ void MySQLTools::on_restoreDatabaseButton_clicked()
     mysql.start("mysql", arguments);
 
     // Wait until finished
-    if (!mysql.waitForFinished()) {
+    if (!mysql.waitForFinished(240000)) {
 
         // Show message box if dump failed
         QMessageBox::critical(this, "Database Restore Failed", "Please ensure that you have mysql-client installed on this system.");

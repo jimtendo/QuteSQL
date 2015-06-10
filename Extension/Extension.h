@@ -7,6 +7,8 @@
 #include <QIcon>
 #include <QToolBar>
 
+#include "SchemaWidget.h"
+
 class ExtensionTab
 {
 public:
@@ -36,6 +38,8 @@ public:
 
     virtual QList<ExtensionTab*> getTabs();
     virtual QList<QToolBar*> getToolBars();
+
+    virtual SchemaWidget *createSchemaWidget(QWidget *parent);
 
 signals:
     void refreshNeeded();
