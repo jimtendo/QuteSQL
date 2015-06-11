@@ -120,7 +120,7 @@ void OpenConnectionDialog::on_driverCombo_currentIndexChanged(const QString &arg
 void OpenConnectionDialog::on_fileButton_clicked()
 {
     // Show dialog and get filename
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/jana", tr("SQL Files (*.sqlite)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("SQL Files (*.sqlite)"));
 
     ui->databaseEdit->setText(fileName);
 }
@@ -306,4 +306,29 @@ void OpenConnectionDialog::on_sshTunnelCheckBox_toggled(bool checked)
     if (checked) {
         ui->hostnameEdit->setText("127.0.0.1");
     }
+}
+
+void OpenConnectionDialog::initDatabase()
+{
+    QString connectionsQuery =
+    "CREATE TABLE connections(id INT PRIMARY KEY NOT NULL,"
+    "                         driver TEXT NOT NULL,"
+    "                         name TEXT NOT NULL,"
+    "                         database TEXT NOT NULL,"
+    "                         username TEXT,"
+    "                         password TEXT,"
+    "                         hostname TEXT,"
+    "                         port INTEGER,"
+    "                         sshTunnel INTEGER,"
+    "                         sshHostname TEXT,"
+    "                         sshPort INTEGER"
+    "                         );";
+
+    QString savedQuery =
+    "CREATE TABLE saved(id INTEGER PRIMARY KEY NOT NULL,"
+    "                   name TEXT NOT NULL,"
+    "                   command TEXT NOT NULL,"
+    "                   connection_id INTEGER NOT NULL"
+    "                   FOREIGN KEY(connection_id) REFERENCES connections(id)"
+    "                   );";
 }

@@ -66,6 +66,8 @@ private slots:
 private:
     void reloadConnections();
 
+    void initDatabase();
+
 private:
     Ui::OpenConnectionDialog *ui;
 
