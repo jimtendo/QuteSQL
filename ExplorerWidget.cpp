@@ -10,7 +10,8 @@
 ExplorerWidget::ExplorerWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ExplorerWidget),
-    m_extension(NULL)
+    m_extension(NULL),
+    m_schemaWidget(NULL)
 {
     ui->setupUi(this);
 }
