@@ -18,7 +18,7 @@ QueryWidget::QueryWidget(QWidget *parent) :
     m_highlighter = new SQLHighlighter(ui->queryEdit->document());
 
     // Connect history's click with fill function
-    //connect(ui->queryHistoryWidget, SIGNAL())
+    connect(ui->queryHistoryWidget, SIGNAL(querySelected(QString)), this, SLOT(setQuery(QString)));
     connect(ui->savedQueryWidget, SIGNAL(addButtonClicked()), this, SLOT(saveQuery()));
 }
 
@@ -85,4 +85,9 @@ void QueryWidget::on_exportButton_clicked()
 void QueryWidget::saveQuery()
 {
     ui->savedQueryWidget->addQuery(ui->queryEdit->toPlainText());
+}
+
+void QueryWidget::setQuery(QString query)
+{
+    ui->queryEdit->setText(query);
 }

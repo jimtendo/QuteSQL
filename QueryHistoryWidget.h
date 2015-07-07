@@ -2,6 +2,7 @@
 #define QUERYHISTORYWIDGET_H
 
 #include <QWidget>
+#include <QListWidgetItem>
 
 namespace Ui {
 class QueryHistoryWidget;
@@ -16,6 +17,14 @@ public:
     ~QueryHistoryWidget();
 
     void addQuery(QString query);
+
+signals:
+    void querySelected(const QString&);
+
+private slots:
+    void on_commandListWidget_itemActivated(QListWidgetItem *item);
+
+    void on_clearButton_clicked();
 
 private:
     Ui::QueryHistoryWidget *ui;

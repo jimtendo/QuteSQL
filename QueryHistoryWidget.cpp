@@ -17,3 +17,13 @@ void QueryHistoryWidget::addQuery(QString query)
 {
     ui->commandListWidget->addItem(query);
 }
+
+void QueryHistoryWidget::on_commandListWidget_itemActivated(QListWidgetItem *item)
+{
+    emit querySelected(item->text());
+}
+
+void QueryHistoryWidget::on_clearButton_clicked()
+{
+    ui->commandListWidget->clear();
+}

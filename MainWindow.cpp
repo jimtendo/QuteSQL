@@ -39,6 +39,9 @@ void MainWindow::on_actionNew_Connection_triggered()
         // Create a new database connection widget
         DatabaseConnectionWidget *databaseConnectionWidget = new DatabaseConnectionWidget(this);
 
+        // Seed random number generator
+        qsrand(QTime::currentTime().msec());
+
         // Get SSH Tunnel information from dialog
         QString sshHostname = connectionDialog.getSshHostname();
         int sshPort = connectionDialog.getSshPort();

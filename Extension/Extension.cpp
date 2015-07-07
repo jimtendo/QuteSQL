@@ -49,6 +49,11 @@ int Extension::removeTable(QString table)
     return false;
 }
 
+void Extension::addRelations(QSqlRelationalTableModel *model)
+{
+
+}
+
 QList<ExtensionTab*> Extension::getTabs()
 {
     return m_tabs;

@@ -30,6 +30,8 @@ private slots:
 
     void saveQuery();
 
+    void setQuery(QString query);
+
 signals:
     void refreshNeeded();
 

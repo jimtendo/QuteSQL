@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QIcon>
 #include <QToolBar>
+#include <QSqlRelationalTableModel>
 
 #include "SchemaWidget.h"
 
@@ -35,6 +36,8 @@ public:
 
     virtual int createTable(QString table);
     virtual int removeTable(QString table);
+
+    virtual void addRelations(QSqlRelationalTableModel *model);
 
     virtual QList<ExtensionTab*> getTabs();
     virtual QList<QToolBar*> getToolBars();

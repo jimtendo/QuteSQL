@@ -9,7 +9,7 @@ namespace Ui {
 class OpenConnectionDialog;
 }
 
-struct SavedConnection
+struct Connection
 {
     // Database settings
     QString name;
@@ -33,6 +33,8 @@ class OpenConnectionDialog : public QDialog
 public:
     explicit OpenConnectionDialog(QWidget *parent = 0);
     ~OpenConnectionDialog();
+
+    Connection *getConnection();
 
     QString getName();
     QString getDriver();
@@ -71,7 +73,7 @@ private:
 private:
     Ui::OpenConnectionDialog *ui;
 
-    QList<SavedConnection*> savedConnections;
+    QList<Connection*> savedConnections;
 };
 
 #endif // OPENCONNECTIONDIALOG_H

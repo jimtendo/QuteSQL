@@ -31,6 +31,12 @@ OpenConnectionDialog::~OpenConnectionDialog()
     delete ui;
 }
 
+Connection * OpenConnectionDialog::getConnection()
+{
+    Connection *connection = new Connection;
+    connection->driver = ui->driverCombo->currentText();
+}
+
 QString OpenConnectionDialog::getName()
 {
     if (getDriver() == "QMYSQL" || getDriver() == "QMYSQL3") {
@@ -130,7 +136,7 @@ void OpenConnectionDialog::on_addButton_clicked()
     // Only add connection if there's actually text there
     if (getName().length()) {
         // Add connection from settings to list
-        SavedConnection *newConnection = new SavedConnection;
+        Connection *newConnection = new Connection;
         newConnection->name = getName();
         newConnection->database = getDatabase();
         newConnection->driver = getDriver();
@@ -150,7 +156,7 @@ void OpenConnectionDialog::on_addButton_clicked()
         settings.beginWriteArray("connections");
 
         int i = 0;
-        foreach(SavedConnection* connection, savedConnections)
+        foreach(Connection* connection, savedConnections)
         {
             settings.setArrayIndex(i);
 
@@ -176,9 +182,9 @@ void OpenConnectionDialog::on_addButton_clicked()
 
 void OpenConnectionDialog::on_connectionsListWidget_itemActivated(QListWidgetItem *item)
 {
-    SavedConnection *connection;
+    Connection *connection;
 
-    QList<SavedConnection*>::iterator i;
+    QList<Connection*>::iterator i;
     for (i = savedConnections.begin(); i != savedConnections.end(); ++i) {
 
         if ((*i)->name == item->text()) {
@@ -215,7 +221,7 @@ void OpenConnectionDialog::reloadConnections()
         settings.setArrayIndex(i);
 
         // Add connection from settings to list
-        SavedConnection *connection = new SavedConnection;
+        Connection *connection = new Connection;
         connection->name = settings.value("name").toString();
         connection->database = settings.value("database").toString();
         connection->driver = settings.value("driver").toString();
@@ -242,7 +248,7 @@ void OpenConnectionDialog::on_removeButton_clicked()
     QListWidgetItem *item = ui->connectionsListWidget->currentItem();
 
     if (item) {
-        QList<SavedConnection*>::iterator i;
+        QList<Connection*>::iterator i;
         for (i = savedConnections.begin(); i != savedConnections.end(); ++i) {
             if (item->text() == "-- New Connection --") {
                 break;
@@ -259,7 +265,7 @@ void OpenConnectionDialog::on_removeButton_clicked()
         settings.beginWriteArray("connections");
 
         int j = 0;
-        foreach(SavedConnection* connection, savedConnections)
+        foreach(Connection* connection, savedConnections)
         {
             settings.setArrayIndex(j);
 
@@ -286,7 +292,7 @@ void OpenConnectionDialog::on_removeButton_clicked()
 
 void OpenConnectionDialog::on_newConnectionButton_clicked()
 {
-    SavedConnection *connection = new SavedConnection;
+    Connection *connection = new Connection;
     int driver = ui->driverCombo->findText(connection->driver);
     ui->driverCombo->setCurrentIndex(driver);
     ui->databaseEdit->setText(connection->database);
