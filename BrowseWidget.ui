@@ -103,7 +103,7 @@
       <string>Add</string>
      </property>
      <property name="icon">
-      <iconset theme="add">
+      <iconset theme="list-add">
        <normaloff/>
       </iconset>
      </property>
@@ -118,9 +118,7 @@
       <string>Remove</string>
      </property>
      <property name="icon">
-      <iconset theme="remove">
-       <normaloff/>
-      </iconset>
+      <iconset theme="list-remove"/>
      </property>
     </widget>
    </item>
@@ -133,9 +131,7 @@
       <string>Export Table</string>
      </property>
      <property name="icon">
-      <iconset theme="filesave">
-       <normaloff/>
-      </iconset>
+      <iconset theme="document-export"/>
      </property>
     </widget>
    </item>

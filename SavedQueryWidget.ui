@@ -33,7 +33,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="add"/>
+      <iconset theme="list-add"/>
      </property>
     </widget>
    </item>
@@ -43,7 +43,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="remove"/>
+      <iconset theme="list-remove"/>
      </property>
     </widget>
    </item>

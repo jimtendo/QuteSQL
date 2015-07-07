@@ -14,9 +14,7 @@
    <string>QuteSQL</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="database">
-    <normaloff/>
-   </iconset>
+   <iconset theme="server-database"/>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
@@ -143,9 +141,7 @@
   </widget>
   <action name="actionNew_Connection">
    <property name="icon">
-    <iconset theme="connect">
-     <normaloff/>
-    </iconset>
+    <iconset theme="connect"/>
    </property>
    <property name="text">
     <string>New Connection</string>
@@ -156,9 +152,7 @@
   </action>
   <action name="actionClose_Connection">
    <property name="icon">
-    <iconset theme="disconnect">
-     <normaloff/>
-    </iconset>
+    <iconset theme="disconnect"/>
    </property>
    <property name="text">
     <string>Close Connection</string>
@@ -199,9 +193,7 @@
   </action>
   <action name="actionRefresh">
    <property name="icon">
-    <iconset theme="reload">
-     <normaloff/>
-    </iconset>
+    <iconset theme="view-refresh"/>
    </property>
    <property name="text">
     <string>Refresh</string>
