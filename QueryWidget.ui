@@ -36,9 +36,7 @@
           <string>Run Query</string>
          </property>
          <property name="icon">
-          <iconset theme="run">
-           <normaloff/>
-          </iconset>
+          <iconset theme="dialog-ok-apply"/>
          </property>
         </widget>
        </item>
@@ -66,9 +64,7 @@
         <string>Export Results</string>
        </property>
        <property name="icon">
-        <iconset theme="filesave">
-         <normaloff/>
-        </iconset>
+        <iconset theme="document-export"/>
        </property>
       </widget>
      </item>
@@ -122,7 +118,7 @@
         <x>0</x>
         <y>0</y>
         <width>200</width>
-        <height>299</height>
+        <height>329</height>
        </rect>
       </property>
       <attribute name="label">

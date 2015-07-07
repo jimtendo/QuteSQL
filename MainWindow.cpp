@@ -93,7 +93,7 @@ void MainWindow::on_actionNew_Connection_triggered()
         }
 
         // Create icon and this to the list of tabs
-        ui->databaseConnectionsTabWidget->addTab(databaseConnectionWidget, QIcon::fromTheme("database"), databaseConnectionWidget->name());
+        ui->databaseConnectionsTabWidget->addTab(databaseConnectionWidget, QIcon::fromTheme("server-database"), databaseConnectionWidget->name());
         ui->databaseConnectionsTabWidget->setCurrentWidget(databaseConnectionWidget);
 
         // Set the current database

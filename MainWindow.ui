@@ -160,9 +160,7 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset theme="exit">
-     <normaloff/>
-    </iconset>
+    <iconset theme="application-exit"/>
    </property>
    <property name="text">
     <string>Quit</string>
