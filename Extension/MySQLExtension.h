@@ -18,8 +18,18 @@ public:
 
     SchemaWidget* createSchemaWidget(QWidget *parent);
 
+    int hasCapability(Capability capability);
+
+    int importDatabase();
+    int exportDatabase();
+    int clearDatabase();
+
     int createTable(QString table);
     int removeTable(QString table);
+    int renameTable(QString from, QString to);
+
+    int addColumn(QString table);
+    int removeColumn(QString table, QString column);
 
 private:
     ExtensionTab *m_toolsTab;

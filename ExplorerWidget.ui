@@ -34,6 +34,9 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::CustomContextMenu</enum>
+        </property>
        </widget>
       </item>
       <item>
@@ -81,6 +84,30 @@
     </widget>
    </item>
   </layout>
+  <action name="actionAdd_Table">
+   <property name="icon">
+    <iconset theme="list-add"/>
+   </property>
+   <property name="text">
+    <string>Add Table</string>
+   </property>
+  </action>
+  <action name="actionRemove_Table">
+   <property name="icon">
+    <iconset theme="list-remove"/>
+   </property>
+   <property name="text">
+    <string>Remove Table</string>
+   </property>
+  </action>
+  <action name="actionRename_Table">
+   <property name="icon">
+    <iconset theme="document-edit"/>
+   </property>
+   <property name="text">
+    <string>Rename Table</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

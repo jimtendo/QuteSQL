@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-SchemaWidget::SchemaWidget(QWidget *parent, QSqlDatabase *database) :
+SchemaWidget::SchemaWidget(QWidget *parent, QSqlDatabase *database, Extension *extension) :
     QWidget(parent),
     ui(new Ui::SchemaWidget)
 {
@@ -11,6 +11,9 @@ SchemaWidget::SchemaWidget(QWidget *parent, QSqlDatabase *database) :
 
     // Set the database
     m_database = database;
+
+    // Set the extension
+    m_extension = extension;
 }
 
 SchemaWidget::~SchemaWidget()

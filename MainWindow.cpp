@@ -116,12 +116,12 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 void MainWindow::on_actionAbout_QuteSql_triggered()
 {
-    QMessageBox::about(this, "About QuteSQL", "QuteSQL developed by James Augustus Zuccon");
+    QMessageBox::about(this, "About QuteSQL", "QuteSQL developed by James Augustus Zuccon PhD");
 }
 
 void MainWindow::on_databaseConnectionsTabWidget_tabCloseRequested(int index)
 {
-    // Get a pointer to the tab instance so we can delete it later
+    // Get a pointer to the tab instance so we can delete it later (at the end of this function)
     DatabaseConnectionWidget *widget = (DatabaseConnectionWidget*)ui->databaseConnectionsTabWidget->widget(index);
 
     // Remove the tab
@@ -137,8 +137,7 @@ void MainWindow::on_databaseConnectionsTabWidget_currentChanged(int index)
     if (m_currentDatabase && m_currentDatabase->getExtension()) {
 
         QList<QToolBar*> toolbars = m_currentDatabase->getExtension()->getToolBars();
-        QList<QToolBar*>::iterator i;
-        for (i = toolbars.begin(); i != toolbars.end(); ++i) {
+        for (QList<QToolBar*>::iterator i = toolbars.begin(); i != toolbars.end(); ++i) {
             removeToolBar((*i));
         }
     }
@@ -150,8 +149,7 @@ void MainWindow::on_databaseConnectionsTabWidget_currentChanged(int index)
     if (m_currentDatabase && m_currentDatabase->getExtension()) {
 
         QList<QToolBar*> toolbars = m_currentDatabase->getExtension()->getToolBars();
-        QList<QToolBar*>::iterator i;
-        for (i = toolbars.begin(); i != toolbars.end(); ++i) {
+        for (QList<QToolBar*>::iterator i = toolbars.begin(); i != toolbars.end(); ++i) {
             addToolBar((*i));
         }
     }

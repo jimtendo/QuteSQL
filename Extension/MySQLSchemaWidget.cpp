@@ -5,7 +5,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-MySQLSchemaModel::MySQLSchemaModel(QObject *parent, QSqlDatabase *database)
+MySQLSchemaModel::MySQLSchemaModel(QObject *parent, QSqlDatabase *database, Extension *extension)
 {
     m_database = database;
 }

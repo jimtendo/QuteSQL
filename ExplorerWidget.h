@@ -22,14 +22,14 @@ public:
     void init(QSqlDatabase *database, Extension *extension = NULL);
 
 public slots:
+    void addTable();
+    void removeTable();
+    void renameTable();
     void refresh();
 
 private slots:
     void on_tableListWidget_itemActivated(QListWidgetItem *item);
-
-    void on_removeButton_clicked();
-
-    void on_addButton_clicked();
+    void on_tableListWidget_customContextMenuRequested(const QPoint &pos);
 
 private:
     Ui::ExplorerWidget *ui;

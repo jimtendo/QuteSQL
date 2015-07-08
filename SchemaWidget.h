@@ -5,6 +5,10 @@
 #include <QSqlDatabase>
 #include <QSqlQueryModel>
 
+#include "Extension/Extension.h"
+
+class Extension;
+
 namespace Ui {
 class SchemaWidget;
 }
@@ -14,7 +18,7 @@ class SchemaWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit SchemaWidget(QWidget *parent, QSqlDatabase *database);
+    explicit SchemaWidget(QWidget *parent, QSqlDatabase *database, Extension *extension = NULL);
     ~SchemaWidget();
 
     virtual void init();
@@ -26,6 +30,9 @@ protected:
 
     // Database
     QSqlDatabase *m_database;
+
+    // Extension
+    Extension *m_extension;
 
     // Current table Name
     QString m_tableName;

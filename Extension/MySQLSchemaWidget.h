@@ -2,13 +2,14 @@
 #define MYSQLSCHEMAWIDGET_H
 
 #include "SchemaWidget.h"
+#include "Extension.h"
 
 #include <QSqlDatabase>
 
 class MySQLSchemaModel : public QSqlQueryModel
 {
 public:
-    MySQLSchemaModel(QObject *parent, QSqlDatabase *database);
+    MySQLSchemaModel(QObject *parent, QSqlDatabase *database, Extension *extension = NULL);
 
     bool setData(const QModelIndex &index, const QVariant &value, int role);
     Qt::ItemFlags flags(const QModelIndex &index) const;

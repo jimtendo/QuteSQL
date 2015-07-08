@@ -39,12 +39,47 @@ Extension::~Extension()
 
 }
 
+int Extension::hasCapability(Capability capability)
+{
+    return false;
+}
+
+int Extension::importDatabase()
+{
+    return false;
+}
+
+int Extension::exportDatabase()
+{
+    return false;
+}
+
+int Extension::clearDatabase()
+{
+    return false;
+}
+
 int Extension::createTable(QString table)
 {
     return false;
 }
 
 int Extension::removeTable(QString table)
+{
+    return false;
+}
+
+int Extension::renameTable(QString from, QString to)
+{
+    return false;
+}
+
+int Extension::addColumn(QString table)
+{
+    return false;
+}
+
+int Extension::removeColumn(QString table, QString column)
 {
     return false;
 }
