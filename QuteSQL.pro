@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     SavedQueryWidget.cpp \
     ColumnDialog.cpp \
     Database.cpp \
-    Utilities/SQLSplitter.cpp
+    Utilities/SQLSplitter.cpp \
+    Tools/SQLSplitterDialog.cpp
 
 HEADERS  += MainWindow.h \
     DatabaseConnectionWidget.h \
@@ -51,7 +52,8 @@ HEADERS  += MainWindow.h \
     SavedQueryWidget.h \
     ColumnDialog.h \
     Database.h \
-    Utilities/SQLSplitter.h
+    Utilities/SQLSplitter.h \
+    Tools/SQLSplitterDialog.h
 
 FORMS    += MainWindow.ui \
     DatabaseConnectionWidget.ui \
@@ -65,7 +67,8 @@ FORMS    += MainWindow.ui \
     ExportSelectionDialog.ui \
     QueryHistoryWidget.ui \
     SavedQueryWidget.ui \
-    ColumnDialog.ui
+    ColumnDialog.ui \
+    Tools/SQLSplitterDialog.ui
 
 target.path = /usr/bin
 

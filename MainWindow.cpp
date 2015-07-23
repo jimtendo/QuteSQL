@@ -11,6 +11,7 @@
 
 #include "OpenConnectionDialog.h"
 #include "DatabaseConnectionWidget.h"
+#include "Tools/SQLSplitterDialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -176,4 +177,10 @@ void MainWindow::on_actionRefresh_triggered()
     if (m_currentDatabase) {
         m_currentDatabase->refresh();
     }
+}
+
+void MainWindow::on_actionSplit_SQL_File_triggered()
+{
+    SQLSplitterDialog dialog;
+    dialog.exec();
 }

@@ -33,7 +33,7 @@ void SqlWidget::setDatabase(QSqlDatabase database)
 void SqlWidget::on_loadFromFileButton_clicked()
 {
     // Show dialog and get filename
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/home/jana", tr("SQL Files (*.sql)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("SQL Files (*.sql)"));
 
     // If no filename was specified, just return
     if (fileName.isEmpty()) {
@@ -74,7 +74,7 @@ void SqlWidget::on_runSqlButton_clicked()
         if (!query.exec(statement)) {
 
             // Always show debug message
-            //qDebug() << "Error: " << statement;
+            qDebug() << "Error: " << statement;
 
             // Only show error if the box is ticked
             if (ui->showErrorsCheckBox->isChecked()) {

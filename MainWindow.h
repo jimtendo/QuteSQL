@@ -34,6 +34,8 @@ private slots:
 
     void on_actionRefresh_triggered();
 
+    void on_actionSplit_SQL_File_triggered();
+
 signals:
     void statusEvent(const QString&);
 
