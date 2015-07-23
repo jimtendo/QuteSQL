@@ -36,8 +36,27 @@ enum Capability
     REMOVE_TABLE = 12,
     RENAME_TABLE = 13,
 
-    ADD_COLUMN = 21,
-    REMOVE_COLUMN = 22
+    VIEW_SCHEMA = 21,
+    ADD_COLUMN = 22,
+    REMOVE_COLUMN = 23,
+    EDIT_COLUMN = 24
+};
+
+enum SchemaColumn
+{
+    NONE,
+    NAME,
+    TYPE,
+    NULLABLE,
+    DEFAULT_VALUE
+};
+
+enum ColumnFlags
+{
+    NO_PROPERTIES = 0,
+    HAS_LENGTH = 1,
+    HAS_NULLABLE = 2,
+    HAS_DEFAULT = 4
 };
 
 class Extension : public QObject
@@ -62,15 +81,16 @@ public:
     virtual int renameTable(QString from, QString to);
 
     // Schema functions
-    virtual int addColumn(QString table);
+    virtual QString viewSchemaQuery(QString table);
+    virtual int getSchemaColumn(SchemaColumn column);
+    virtual QMap<QString, int> getDataTypes();
+    virtual int addColumn(QString table, QString name, QString type, int length = 0, bool nullable = false, QString defaultValue = "");
     virtual int removeColumn(QString table, QString column);
 
     virtual void addRelations(QSqlRelationalTableModel *model);
 
     virtual QList<ExtensionTab*> getTabs();
     virtual QList<QToolBar*> getToolBars();
-
-    virtual SchemaWidget *createSchemaWidget(QWidget *parent);
 
 signals:
     void refreshNeeded();

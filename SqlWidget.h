@@ -25,6 +25,8 @@ private slots:
 
     void on_runSqlButton_clicked();
 
+    void on_syntaxCheckBox_toggled(bool checked);
+
 signals:
     void refreshNeeded();
 

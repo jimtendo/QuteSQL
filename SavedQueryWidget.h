@@ -20,6 +20,8 @@ public:
 private:
     Ui::SavedQueryWidget *ui;
 
+    QString getName();
+
 signals:
     void addButtonClicked();
 

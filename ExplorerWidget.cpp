@@ -52,19 +52,13 @@ void ExplorerWidget::init(QSqlDatabase *database, Extension *extension)
     // Set the database for child widgets
     ui->browseTab->setDatabase(m_database);
 
-    // Add the schema editor from the extension
-    if (m_extension) {
-        m_schemaWidget = m_extension->createSchemaWidget(this);
+    // Setup schema widget (if supported by extension)
+    if (m_extension && m_extension->hasCapability(VIEW_SCHEMA)) {
+        m_schemaWidget = new SchemaWidget(this, m_database, m_extension);
+        m_schemaWidget->init();
+        ui->tabWidget->addTab(m_schemaWidget, QIcon::fromTheme("document-edit"), "Schema");
+        connect(m_schemaWidget, SIGNAL(refreshNeeded()), this, SLOT(refresh()));
     }
-
-    // If the extension does not contain its own schema widget, use default
-    if (!m_schemaWidget) {
-        m_schemaWidget = new SchemaWidget(this, m_database);
-    }
-
-    // Initalise schema widget and add tab
-    m_schemaWidget->init();
-    ui->tabWidget->addTab(m_schemaWidget, QIcon::fromTheme("document-edit"), "Schema");
 
     // Refresh table list
     refresh();
@@ -85,8 +79,13 @@ void ExplorerWidget::refresh()
 
 void ExplorerWidget::on_tableListWidget_itemActivated(QListWidgetItem *item)
 {
+    // Set the browse tab to this table
     ui->browseTab->setTable(item->text());
-    m_schemaWidget->setTable(item->text());
+
+    // If schema is supported, then set schema to this table
+    if (m_schemaWidget) {
+        m_schemaWidget->setTable(item->text());
+    }
 }
 
 void ExplorerWidget::addTable()

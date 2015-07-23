@@ -74,7 +74,9 @@ bool BrowseWidget::setTable(QString table)
 
 void BrowseWidget::on_filterButton_clicked()
 {
+    // Set filter and then select (otherwise it doesn't always work)
     m_model->setFilter(ui->filterEdit->text());
+    m_model->select();
 }
 
 void BrowseWidget::on_removeButton_clicked()

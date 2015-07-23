@@ -37,7 +37,7 @@
    <item row="1" column="1">
     <widget class="QPushButton" name="addColumnButton">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="text">
       <string>Add</string>
@@ -52,7 +52,7 @@
    <item row="1" column="2">
     <widget class="QPushButton" name="removeColumnButton">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="text">
       <string>Remove</string>

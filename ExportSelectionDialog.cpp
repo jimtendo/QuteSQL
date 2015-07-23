@@ -41,16 +41,20 @@ void ExportSelectionDialog::on_buttonBox_accepted()
                 QTextStream data(&file);
                 QStringList strList;
 
+                // Output header
+                for (int i = 0; i < m_tableView->model()->columnCount(); i++) {
+                    strList << "\"" + m_tableView->model()->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString() + "\" ";
+                }
+                data << strList.join(",") + "\n";
+
                 // Cycle through each row
-                for( int row = 0; row < m_tableView->model()->rowCount(); row++ )
-                {
+                for (int row = 0; row < m_tableView->model()->rowCount(); row++) {
                     strList.clear();
 
                     // Cycle through each column
-                    for( int column = 0; column < m_tableView->model()->columnCount(); column++ )
-                    {
+                    for( int column = 0; column < m_tableView->model()->columnCount(); column++ ) {
                         QModelIndex index = m_tableView->model()->index(row, column, QModelIndex());
-                        strList << "\" " + m_tableView->model()->data(index).toString() + "\" ";
+                        strList << "\"" + m_tableView->model()->data(index).toString() + "\" ";
                     }
                     data << strList.join( "," )+"\n";
                 }

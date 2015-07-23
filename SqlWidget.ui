@@ -49,6 +49,13 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
+      <widget class="QCheckBox" name="syntaxCheckBox">
+       <property name="text">
+        <string>Syntax Highlighting</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QCheckBox" name="showErrorsCheckBox">
        <property name="text">
         <string>Show Errors</string>

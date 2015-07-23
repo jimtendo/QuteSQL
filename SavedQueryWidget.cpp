@@ -23,6 +23,30 @@ void SavedQueryWidget::addQuery(QString query)
     //item->setData(Qt::UserRole, query);
     ui->listWidget->addItem(item);
     //http://stackoverflow.com/questions/6905147/qt-qlistwidgetitem-multiple-lines
+
+    // Save connections
+    /*QSettings settings;
+    settings.beginWriteArray("connections");
+
+    int i = 0;
+    foreach(Connection* connection, savedConnections)
+    {
+        settings.setArrayIndex(i);
+
+        // Add connection from settings to list
+        settings.setValue("name", connection->name);
+        settings.setValue("database", connection->database);
+        settings.setValue("driver", connection->driver);
+        settings.setValue("hostname", connection->hostname);
+        settings.setValue("username", connection->username);
+        settings.setValue("password", connection->password);
+        settings.setValue("port", connection->port);
+        settings.setValue("sshTunnel", connection->sshTunnel);
+        settings.setValue("sshHostname", connection->sshHostname);
+        settings.setValue("sshPort", connection->sshPort);
+        i++;
+    }
+    settings.endArray();*/
 }
 
 void SavedQueryWidget::on_addButton_clicked()

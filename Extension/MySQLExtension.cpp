@@ -63,6 +63,7 @@ int MySQLExtension::hasCapability(Capability capability)
         case REMOVE_TABLE: return true;
         case RENAME_TABLE: return true;
 
+        case VIEW_SCHEMA: return true;
         case ADD_COLUMN: return true;
         case REMOVE_COLUMN: return true;
     }
@@ -202,12 +203,72 @@ int MySQLExtension::renameTable(QString from, QString to)
     return true;
 }
 
-int MySQLExtension::addColumn(QString table)
+QString MySQLExtension::viewSchemaQuery(QString table)
 {
-    // Run the rename query
-    QSqlQuery query = m_database->exec("ALTER TABLE " + table + " ADD new_column VARCHAR(128)");
+    return "DESC " + table;
+}
 
-    return false;
+int MySQLExtension::getSchemaColumn(SchemaColumn column)
+{
+    switch (column) {
+        case NAME: return 0;
+        case TYPE: return 1;
+        case NULLABLE: return 2;
+        case DEFAULT_VALUE: return 4;
+    }
+
+    return 0;
+}
+
+QMap<QString, int> MySQLExtension::getDataTypes()
+{
+    QMap<QString, int> types;
+
+    types["char"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+    types["varchar"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+    types["tinytext"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+    types["text"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+    types["mediumtext"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+    types["longtext"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+    types["binary"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+    types["varbinary"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+
+    types["text"] = NO_PROPERTIES;
+    types["varchar"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+    types["int"] = HAS_LENGTH + HAS_NULLABLE + HAS_DEFAULT;
+    types["date"] = NO_PROPERTIES;;
+    types["datetime"] = NO_PROPERTIES;;
+    types["timestamp"] = NO_PROPERTIES;;
+
+    return types;
+}
+
+int MySQLExtension::addColumn(QString table, QString name, QString type, int length, bool nullable, QString defaultValue)
+{
+    QString queryString = "ALTER TABLE " + table + " ADD " + name;
+
+    // If there's a length, embed that in type
+    if (length) {
+        type = type + "(" + QString::number(length) + ")";
+    }
+
+    // Add type
+    queryString += " " + type;
+
+    // If nullable is set, add that
+    if (!nullable) {
+        queryString += " NOT NULL";
+    }
+
+    // if default value is set, add that
+    if (defaultValue.length()) {
+        queryString += " DEFAULT '" + defaultValue + "'";
+    }
+
+    // Run the add column query
+    QSqlQuery query = m_database->exec(queryString);
+
+    return true;
 }
 
 int MySQLExtension::removeColumn(QString table, QString column)

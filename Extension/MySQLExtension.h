@@ -28,7 +28,10 @@ public:
     int removeTable(QString table);
     int renameTable(QString from, QString to);
 
-    int addColumn(QString table);
+    QString viewSchemaQuery(QString table);
+    int getSchemaColumn(SchemaColumn column);
+    QMap<QString, int> getDataTypes();
+    int addColumn(QString table, QString name, QString type, int length = 0, bool nullable = false, QString defaultValue = "");
     int removeColumn(QString table, QString column);
 
 private:

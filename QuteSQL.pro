@@ -28,7 +28,10 @@ SOURCES += main.cpp\
     ExportSelectionDialog.cpp \
     Extension/MySQLSchemaWidget.cpp \
     QueryHistoryWidget.cpp \
-    SavedQueryWidget.cpp
+    SavedQueryWidget.cpp \
+    ColumnDialog.cpp \
+    Database.cpp \
+    Utilities/SQLSplitter.cpp
 
 HEADERS  += MainWindow.h \
     DatabaseConnectionWidget.h \
@@ -45,7 +48,10 @@ HEADERS  += MainWindow.h \
     ExportSelectionDialog.h \
     Extension/MySQLSchemaWidget.h \
     QueryHistoryWidget.h \
-    SavedQueryWidget.h
+    SavedQueryWidget.h \
+    ColumnDialog.h \
+    Database.h \
+    Utilities/SQLSplitter.h
 
 FORMS    += MainWindow.ui \
     DatabaseConnectionWidget.ui \
@@ -58,7 +64,8 @@ FORMS    += MainWindow.ui \
     Extension/MySQLTools.ui \
     ExportSelectionDialog.ui \
     QueryHistoryWidget.ui \
-    SavedQueryWidget.ui
+    SavedQueryWidget.ui \
+    ColumnDialog.ui
 
 target.path = /usr/bin
 

@@ -74,7 +74,24 @@ int Extension::renameTable(QString from, QString to)
     return false;
 }
 
-int Extension::addColumn(QString table)
+QString Extension::viewSchemaQuery(QString table)
+{
+    return QString();
+}
+
+int Extension::getSchemaColumn(SchemaColumn column)
+{
+    return 0;
+}
+
+QMap<QString, int> Extension::getDataTypes()
+{
+    QMap<QString, int> types;
+
+    return types;
+}
+
+int Extension::addColumn(QString table, QString name, QString type, int length, bool nullable, QString defaultValue)
 {
     return false;
 }
@@ -97,9 +114,4 @@ QList<ExtensionTab*> Extension::getTabs()
 QList<QToolBar*> Extension::getToolBars()
 {
     return m_toolBars;
-}
-
-SchemaWidget * Extension::createSchemaWidget(QWidget *parent)
-{
-    return NULL;
 }

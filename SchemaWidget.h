@@ -5,9 +5,25 @@
 #include <QSqlDatabase>
 #include <QSqlQueryModel>
 
-#include "Extension/Extension.h"
+#include <Extension/Extension.h>
 
 class Extension;
+
+class SchemaModel : public QSqlQueryModel
+{
+public:
+    SchemaModel(QObject *parent, QSqlDatabase *database);
+
+    void setTable(QString table);
+
+    virtual QMap<QString, int> getDataTypes();
+
+
+
+private:
+    QSqlDatabase *m_database;
+    QString m_tableName;
+};
 
 namespace Ui {
 class SchemaWidget;
@@ -25,6 +41,15 @@ public:
 
     virtual bool setTable(QString table);
 
+public slots:
+    void refresh();
+
+    void addColumn();
+    void removeColumn();
+
+signals:
+    void refreshNeeded();
+
 protected:
     Ui::SchemaWidget *ui;
 
@@ -39,6 +64,8 @@ protected:
 
     // Model for query
     QSqlQueryModel *m_model;
+private slots:
+    void on_tableView_activated(const QModelIndex &index);
 };
 
 #endif // SCHEMAWIDGET_H

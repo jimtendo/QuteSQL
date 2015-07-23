@@ -9,21 +9,18 @@
 #include <QMessageBox>
 #include <QSqlError>
 
+#include "Utilities/SQLSplitter.h"
+
 SqlWidget::SqlWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::SqlWidget)
+    ui(new Ui::SqlWidget),
+    m_highlighter(NULL)
 {
     ui->setupUi(this);
-
-    // Attach SQL Highlighter
-    m_highlighter = new SQLHighlighter(ui->sqlEdit->document());
 }
 
 SqlWidget::~SqlWidget()
 {
-    // Delete highlighter
-    delete m_highlighter;
-
     delete ui;
 }
 
@@ -58,24 +55,26 @@ void SqlWidget::on_runSqlButton_clicked()
     QString queryString = ui->sqlEdit->toPlainText();
 
     // Split the query string into multiple queries
-    QStringList queries = queryString.split(QRegularExpression(";"), QString::SkipEmptyParts);
+    SQLSplitter splitter(queryString);
 
     // Enable progress bar
     ui->progressBar->setEnabled(true);
 
     // Set progress bar range
-    ui->progressBar->setRange(0, queries.length());
+    ui->progressBar->setRange(0, splitter.getLength());
 
-    foreach(QString statement, queries)
-    {
+    while (!splitter.atEnd()) {
         // Create query
         QSqlQuery query(m_database);
+
+        // Get next query
+        QString statement = splitter.getNext();
 
         // Execute the query string
         if (!query.exec(statement)) {
 
             // Always show debug message
-            qDebug() << "Error: " << statement;
+            //qDebug() << "Error: " << statement;
 
             // Only show error if the box is ticked
             if (ui->showErrorsCheckBox->isChecked()) {
@@ -84,7 +83,7 @@ void SqlWidget::on_runSqlButton_clicked()
         }
 
         // Increment progress bar value
-        ui->progressBar->setValue( ui->progressBar->value() + 1 );
+        ui->progressBar->setValue(splitter.getPosition());
     }
 
     // Let the user know the code has been run
@@ -92,4 +91,14 @@ void SqlWidget::on_runSqlButton_clicked()
 
     // Emit a signal that the database needs refreshing
     emit refreshNeeded();
+}
+
+void SqlWidget::on_syntaxCheckBox_toggled(bool checked)
+{
+    // Attach SQL Highlighter if checked, otherwise delete it
+    if (checked) {
+        m_highlighter = new SQLHighlighter(ui->sqlEdit->document());
+    } else {
+        delete m_highlighter;
+    }
 }
