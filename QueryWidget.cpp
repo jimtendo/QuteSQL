@@ -38,6 +38,9 @@ void QueryWidget::setDatabase(QSqlDatabase *database)
 
     // Setup the model
     m_model = new QSqlQueryModel(this);
+
+    // Setup saved query widget
+    ui->savedQueryWidget->setDatabase(m_database);
 }
 
 void QueryWidget::on_runButton_clicked()
