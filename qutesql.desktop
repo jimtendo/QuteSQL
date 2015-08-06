@@ -6,6 +6,6 @@ GenericName=SQL Database Manager
 Comment=A simple SQL Database Manager based on Qt
 TryExec=qutesql
 Exec=qutesql %u
-Icon=database
+Icon=server-database
 Categories=Development;Internet;
 Terminal=false

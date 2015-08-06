@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = qutesql
 TEMPLATE = app
 
+VERSION = 0.1
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += main.cpp\
         MainWindow.cpp \
@@ -76,3 +78,6 @@ desktop.path = /usr/share/applications/
 desktop.files += $${TARGET}.desktop
 
 INSTALLS += target desktop
+
+OTHER_FILES += \
+    README.md

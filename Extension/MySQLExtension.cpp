@@ -9,36 +9,19 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QProgressDialog>
 #include <QSqlQuery>
+#include <QSqlDriver>
 #include <QSqlError>
+#include <QSqlField>
+#include <QSqlRecord>
 #include <QDebug>
+
+#define CREATE_TABLE_COLUMN 1
 
 MySQLExtension::MySQLExtension(QObject *parent, QSqlDatabase *database) :
     Extension(parent, database)
 {
-    // Backup actions
-    m_backupAction = new QAction(QIcon::fromTheme("document-export"), QT_TR_NOOP("&Export..."), &m_toolsToolBar);
-    m_backupAction->setStatusTip(QT_TR_NOOP("Export database"));
-    connect(m_backupAction, SIGNAL(triggered()), &m_toolsWidget, SLOT(on_backupDatabaseButton_clicked()));
-
-    // Restore actions
-    m_restoreAction = new QAction(QIcon::fromTheme("document-import"), QT_TR_NOOP("&Import..."), &m_toolsToolBar);
-    m_restoreAction->setStatusTip(QT_TR_NOOP("Import Database"));
-    connect(m_restoreAction, SIGNAL(triggered()), &m_toolsWidget, SLOT(on_restoreDatabaseButton_clicked()));
-
-    // Clear actions
-    m_clearAction = new QAction(QIcon::fromTheme("edit-clear"), QT_TR_NOOP("&Clear..."), &m_toolsToolBar);
-    m_clearAction->setStatusTip(QT_TR_NOOP("Clear Database"));
-    connect(m_clearAction, SIGNAL(triggered()), &m_toolsWidget, SLOT(on_clearDatabaseButton_clicked()));
-
-    // Add actions to "Tools" toolbar
-    m_toolsToolBar.addAction(m_backupAction);
-    m_toolsToolBar.addAction(m_restoreAction);
-    m_toolsToolBar.addAction(m_clearAction);
-
-    // Append "Tools" toolbar
-    m_toolBars.append(&m_toolsToolBar);
-
     // Create Tools Tab
     m_toolsWidget.setDatabase(m_database);
     m_toolsTab = new ExtensionTab(&m_toolsWidget, QIcon::fromTheme("applications-utilities"), "Tools");
@@ -51,14 +34,14 @@ MySQLExtension::MySQLExtension(QObject *parent, QSqlDatabase *database) :
 MySQLExtension::~MySQLExtension()
 {
     delete m_toolsTab;
-    delete m_clearAction;
-    delete m_backupAction;
-    delete m_restoreAction;
 }
 
 int MySQLExtension::hasCapability(Capability capability)
 {
     switch (capability) {
+        case EXPORT_DATABASE: return true;
+        case CLEAR_DATABASE: return true;
+
         case ADD_TABLE: return true;
         case REMOVE_TABLE: return true;
         case RENAME_TABLE: return true;
@@ -71,80 +54,93 @@ int MySQLExtension::hasCapability(Capability capability)
     return false;
 }
 
-int MySQLExtension::importDatabase()
-{
-    /*// Show dialog and get filename
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("SQL Files (*.sql)"));
-
-    // If no filename was specified, just return
-    if (fileName.isEmpty()) {
-        return;
-    }
-
-    // Create mysqldump proces and set file to save to
-    QProcess mysql;
-    mysql.setStandardInputFile(fileName);
-
-    // Compile Arguments
-    QStringList arguments;
-    arguments << "-h" << m_database->hostName() << "-P" << QString::number(m_database->port())
-              << "-u" << m_database->userName() << QString("-p" + m_database->password()) << m_database->databaseName();
-
-    // Execute dump command
-    mysql.start("mysql", arguments);
-
-    // Wait until finished
-    if (!mysql.waitForFinished(240000)) {
-
-        // Show message box if dump failed
-        QMessageBox::critical(this, "Database Restore Failed", "Please ensure that you have mysql-client installed on this system.");
-
-        // Prevent further execution
-        return;
-    }
-
-    // Let user know backup was successful
-    QMessageBox::information(this, "Restore Successful", "Database has been successfully restored.");*/
-}
-
 int MySQLExtension::exportDatabase()
 {
-    /*// Show dialog and get filename
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), QDir::homePath(), tr("SQL Files (*.sql)"));
+    // Show dialog and get filename
+
+    QString fileName = QFileDialog::getSaveFileName(qApp->activeWindow(), tr("Save File"), QDir::homePath(), tr("SQL Files (*.sql)"));
 
     // If no filename was specified, just return
     if (fileName.isEmpty()) {
-        return;
+        return false;
     }
 
-    // Create mysqldump proces and set file to save to
-    QProcess mysqldump;
-    mysqldump.setStandardOutputFile(fileName);
+    // Setup file
+    QFile outputFile(fileName);
+    outputFile.open(QFile::WriteOnly | QFile::Text);
 
-    // Compile Arguments
-    QStringList arguments;
-    arguments << "-h" << m_database->hostName() << "-P" << QString::number(m_database->port())
-              << "-u" << m_database->userName() << QString("-p" + m_database->password()) << m_database->databaseName();
-
-    // Execute dump command
-    mysqldump.start("mysqldump", arguments);
-
-    // Wait until finished
-    if (!mysqldump.waitForFinished(240000)) {
-
-        // Show message box if dump failed
-        QMessageBox::critical(this, "Database Backup Failed", "Please ensure that you have mysqldump installed on this system.");
-
-        // Prevent further execution
-        return;
+    // Get number of records we'll need to insert (for the progress dialog) as they are what takes times
+    int insertsCount = 0;
+    foreach (QString table, m_database->tables()) {
+        QSqlQuery tableSizeQuery("SELECT COUNT(*) FROM " + table, *m_database);
+        tableSizeQuery.next();
+        insertsCount += tableSizeQuery.record().value(0).toInt();
     }
 
-    QMessageBox::information(this, "Backup Successful", "Database has been successfully backed up to:\n " + fileName);*/
+    // Create Progress Dialog
+    QProgressDialog progress("Dumping database...", "Abort", 0, insertsCount);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setValue(0);
+    progress.show();
+
+    // Create text stream and about headers
+    QTextStream outputStream(&outputFile);
+    outputStream << "-- QuteSQL Dump - V" << qApp->applicationVersion() << endl;
+    outputStream << "SET NAMES utf8;" << endl;
+    outputStream << "SET time_zone = '+00:00';" << endl;
+    outputStream << "SET foreign_key_checks = 0;" << endl;
+    outputStream << "SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';" << endl << endl;
+
+    // Dump each table
+    foreach (QString table, m_database->tables()) {
+
+        // If the cancel button was clicked, abort
+        if (progress.wasCanceled())
+            return false;
+
+        // Dump the create table statement
+        QSqlQuery createTableQuery("SHOW CREATE TABLE " + table, *m_database);
+        outputStream << "DROP TABLE IF EXISTS `" + table + "`;" << endl;
+        createTableQuery.next();
+        outputStream << createTableQuery.record().value(CREATE_TABLE_COLUMN).toString() + ";" << endl << endl;
+
+        // Dump the insert queries
+        QSqlQuery selectTableQuery("SELECT * FROM " + table, *m_database);
+        if (selectTableQuery.size()) {
+            outputStream << "INSERT INTO `" + table + "` VALUES " << endl;
+            while (selectTableQuery.next()) {
+                QString row = "(";
+                for (int column = 0; column < selectTableQuery.record().count(); column++) {
+                    row += m_database->driver()->formatValue(selectTableQuery.record().field(column)) + ",";
+                }
+                row.truncate(row.size()-1);
+                row += "),";
+                outputStream << row << endl;
+
+                // If the cancel button was clicked, abort
+                progress.setValue(progress.value()+1);
+                if (progress.wasCanceled())
+                    return false;
+
+                // Update our event loop so that progress dialog updates
+                QCoreApplication::processEvents();
+            }
+            outputStream.seek(outputStream.pos()-2);
+            outputStream << ";" << endl << endl;
+        }
+    }
+
+    // Close our output file
+    outputFile.close();
+
+    QMessageBox::information(qApp->activeWindow(), "Backup Successful", "Database has been successfully exported to:\n " + fileName);
+
+    return true;
 }
 
 int MySQLExtension::clearDatabase()
 {
-    /*if (QMessageBox::Yes == QMessageBox::question(this, "Clear Database", "Are you sure you want to clear the database?\n\nThis action cannot be undone.")) {
+    if (QMessageBox::Yes == QMessageBox::question(qApp->activeWindow(), "Clear Database", "Are you sure you want to clear the database?\n\nThis action cannot be undone.")) {
 
         QSqlQuery query(*m_database);
 
@@ -165,18 +161,20 @@ int MySQLExtension::clearDatabase()
         if (!query.exec(statements)) {
 
             // Only show error if the box is ticked
-            QMessageBox::critical(this, "Could not execute query", query.lastError().text());
+            QMessageBox::critical(qApp->activeWindow(), "Could not execute query", query.lastError().text());
 
             // Prevent further execution
-            return;
+            return false;
         }
 
         // Let the user know it all went splendidly
-        QMessageBox::information(this, "Clear Successful", "Database has been successfully cleared.");
+        QMessageBox::information(qApp->activeWindow(), "Clear Successful", "Database has been successfully cleared.");
 
         // Let the app know a refresh is needed
         emit refreshNeeded();
-    }*/
+
+        return true;
+    }
 }
 
 int MySQLExtension::createTable(QString table)

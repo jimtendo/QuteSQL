@@ -36,6 +36,12 @@ private slots:
 
     void on_actionSplit_SQL_File_triggered();
 
+    void on_actionImport_Database_triggered();
+
+    void on_actionExport_Database_triggered();
+
+    void on_actionClear_Database_triggered();
+
 signals:
     void statusEvent(const QString&);
 

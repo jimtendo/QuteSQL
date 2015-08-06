@@ -44,7 +44,11 @@
     </layout>
    </item>
    <item>
-    <widget class="QPlainTextEdit" name="sqlEdit"/>
+    <widget class="QPlainTextEdit" name="sqlEdit">
+     <property name="lineWrapMode">
+      <enum>QPlainTextEdit::NoWrap</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">

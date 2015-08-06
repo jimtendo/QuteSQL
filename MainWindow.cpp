@@ -154,6 +154,28 @@ void MainWindow::on_databaseConnectionsTabWidget_currentChanged(int index)
             addToolBar((*i));
         }
     }
+
+    // Enable tools if there's a database selected
+    if (m_currentDatabase) {
+        ui->actionImport_Database->setEnabled(true);
+
+        // If extensions are supported...
+        if (m_currentDatabase->getExtension()) {
+            if (m_currentDatabase->getExtension()->hasCapability(EXPORT_DATABASE)) {
+                ui->actionExport_Database->setEnabled(true);
+            }
+
+            if (m_currentDatabase->getExtension()->hasCapability(CLEAR_DATABASE)) {
+                ui->actionClear_Database->setEnabled(true);
+            }
+        }
+    }
+
+    // Disable tools if there's no database selected
+    else {
+        ui->actionImport_Database->setEnabled(false);
+        ui->actionExport_Database->setEnabled(false);
+    }
 }
 
 void MainWindow::on_actionClose_Connection_triggered()
@@ -183,4 +205,25 @@ void MainWindow::on_actionSplit_SQL_File_triggered()
 {
     SQLSplitterDialog dialog;
     dialog.exec();
+}
+
+void MainWindow::on_actionImport_Database_triggered()
+{
+    if (m_currentDatabase) {
+        m_currentDatabase->importDatabase();
+    }
+}
+
+void MainWindow::on_actionExport_Database_triggered()
+{
+    if (m_currentDatabase && m_currentDatabase->getExtension()->hasCapability(EXPORT_DATABASE)) {
+        m_currentDatabase->getExtension()->exportDatabase();
+    }
+}
+
+void MainWindow::on_actionClear_Database_triggered()
+{
+    if (m_currentDatabase && m_currentDatabase->getExtension()->hasCapability(CLEAR_DATABASE)) {
+        m_currentDatabase->getExtension()->clearDatabase();
+    }
 }

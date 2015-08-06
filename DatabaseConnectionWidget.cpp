@@ -4,8 +4,13 @@
 #include <QUrl>
 #include <QThread>
 #include <QDebug>
+#include <QProgressDialog>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QSqlQuery>
 
 #include "Extension/MySQLExtension.h"
+#include "Utilities/SQLSplitter.h"
 
 DatabaseConnectionWidget::DatabaseConnectionWidget(QWidget *parent) :
     QWidget(parent),
@@ -110,6 +115,57 @@ bool DatabaseConnectionWidget::connectToDatabase(QString name, QString driver, Q
     // Setup SQL Widget
     ui->sqlTab->setDatabase(m_database);
     connect(ui->sqlTab, SIGNAL(refreshNeeded()), this, SLOT(refresh()));
+
+    return true;
+}
+
+bool DatabaseConnectionWidget::importDatabase()
+{
+    // Show dialog and get filename
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("SQL Files (*.sql)"));
+
+    // If no filename was specified, just return
+    if (fileName.isEmpty()) {
+        return false;
+    }
+
+    // Get the query string
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        return false;
+    }
+
+    // Read string from file and feed into splitter
+    QTextStream in(&file);
+    SQLSplitter splitter(in.readAll());
+
+    // Create Progress Dialog
+    QProgressDialog progress("Importing database...", "Abort", 0, splitter.getLength());
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setValue(0);
+    progress.show();
+
+    while (!splitter.atEnd()) {
+        // Create query
+        QSqlQuery query(m_database);
+
+        // Get next query
+        QString statement = splitter.getNext();
+
+        // Execute the query string
+        if (!query.exec(statement)) {
+            qDebug() << "Error: " << statement;
+        }
+
+        // Increment progress bar value
+        progress.setValue(splitter.getPosition());
+    }
+
+    // Let the user know the code has been run
+    QMessageBox::information(this, "Operation Successful", "Database has been imported successfully.");
+
+    // Refresh the database
+    refresh();
 
     return true;
 }

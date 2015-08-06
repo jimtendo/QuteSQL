@@ -3,10 +3,13 @@
 ## Todo
 
 - Create wrapper QSqlDatabase class (with functions like executeQuery(), getName(), etc)
-- Create log tab that shows history of all SQL commands executed.
+- Create log tab that shows history of all SQL commands executed. (Should do as list view or something)
 - Store settings in SQLite Database (Storing using QSettings is inconvenient with arrays.)
 - Export selected
-- SQL Splitter
+
+## Bugs
+- Remove Table doesn't work if table has constraints (MySQL)
+- SQL Splitter (Not sure if class works 100%)
 
 ## SQLite Database Schema
 

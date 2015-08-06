@@ -67,6 +67,7 @@ bool BrowseWidget::setTable(QString table)
 
     // Neaten it up
     ui->tableView->setSortingEnabled(true);
+    ui->tableView->sortByColumn(0, Qt::AscendingOrder);
     ui->tableView->setAlternatingRowColors(true);
 
     return true;
