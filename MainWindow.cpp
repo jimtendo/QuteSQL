@@ -163,10 +163,14 @@ void MainWindow::on_databaseConnectionsTabWidget_currentChanged(int index)
         if (m_currentDatabase->getExtension()) {
             if (m_currentDatabase->getExtension()->hasCapability(EXPORT_DATABASE)) {
                 ui->actionExport_Database->setEnabled(true);
+            } else {
+                ui->actionExport_Database->setEnabled(false);
             }
 
             if (m_currentDatabase->getExtension()->hasCapability(CLEAR_DATABASE)) {
                 ui->actionClear_Database->setEnabled(true);
+            } else {
+                ui->actionClear_Database->setEnabled(false);
             }
         }
     }
