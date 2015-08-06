@@ -188,7 +188,7 @@ int MySQLExtension::createTable(QString table)
 int MySQLExtension::removeTable(QString table)
 {
     // Run the drop query
-    QSqlQuery query = m_database->exec("DROP TABLE " + table);
+    QSqlQuery query = m_database->exec("SET foreign_key_checks = 0; DROP TABLE " + table + "; SET foreign_key_checks = 1;");
 
     return true;
 }

@@ -8,7 +8,6 @@
 - Export selected
 
 ## Bugs
-- Remove Table doesn't work if table has constraints (MySQL)
 - SQL Splitter (Not sure if class works 100%)
 
 ## SQLite Database Schema
