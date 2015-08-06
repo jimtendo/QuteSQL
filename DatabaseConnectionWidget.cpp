@@ -62,7 +62,7 @@ bool DatabaseConnectionWidget::createSshTunnel(QString hostname, int remotePort,
     m_sshTunnel.start("ssh", arguments);
 
     // Wait until finished
-    if (!m_sshTunnel.waitForFinished(10000)) {
+    if (!m_sshTunnel.waitForFinished(20000)) {
         return false;
     }
 
