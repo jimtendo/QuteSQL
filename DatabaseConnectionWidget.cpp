@@ -141,7 +141,7 @@ bool DatabaseConnectionWidget::importDatabase()
 
     // Create Progress Dialog
     QProgressDialog progress("Importing database...", "Abort", 0, splitter.getLength());
-    progress.setWindowModality(Qt::WindowModal);
+    progress.setWindowModality(Qt::ApplicationModal);
     progress.setValue(0);
     progress.show();
 

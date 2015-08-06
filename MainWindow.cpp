@@ -155,6 +155,11 @@ void MainWindow::on_databaseConnectionsTabWidget_currentChanged(int index)
         }
     }
 
+    // Disable all tools by default
+    ui->actionImport_Database->setEnabled(false);
+    ui->actionExport_Database->setEnabled(false);
+    ui->actionClear_Database->setEnabled(false);
+
     // Enable tools if there's a database selected
     if (m_currentDatabase) {
         ui->actionImport_Database->setEnabled(true);
@@ -163,22 +168,12 @@ void MainWindow::on_databaseConnectionsTabWidget_currentChanged(int index)
         if (m_currentDatabase->getExtension()) {
             if (m_currentDatabase->getExtension()->hasCapability(EXPORT_DATABASE)) {
                 ui->actionExport_Database->setEnabled(true);
-            } else {
-                ui->actionExport_Database->setEnabled(false);
             }
 
             if (m_currentDatabase->getExtension()->hasCapability(CLEAR_DATABASE)) {
                 ui->actionClear_Database->setEnabled(true);
-            } else {
-                ui->actionClear_Database->setEnabled(false);
             }
         }
-    }
-
-    // Disable tools if there's no database selected
-    else {
-        ui->actionImport_Database->setEnabled(false);
-        ui->actionExport_Database->setEnabled(false);
     }
 }
 

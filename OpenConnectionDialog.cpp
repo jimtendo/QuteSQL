@@ -240,6 +240,8 @@ void OpenConnectionDialog::reloadConnections()
         ui->connectionsListWidget->addItem(connection->name);
     }
     settings.endArray();
+
+    ui->connectionsListWidget->sortItems();
 }
 
 void OpenConnectionDialog::on_removeButton_clicked()
