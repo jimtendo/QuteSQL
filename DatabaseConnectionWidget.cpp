@@ -157,6 +157,10 @@ bool DatabaseConnectionWidget::importDatabase()
             qDebug() << "Error: " << statement;
         }
 
+        // If the cancel button was clicked, abort
+        if (progress.wasCanceled())
+            return false;
+
         // Increment progress bar value
         progress.setValue(splitter.getPosition());
     }

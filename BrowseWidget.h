@@ -44,6 +44,9 @@ private:
 
     // Model for table
     QSqlTableModel *m_model;
+
+    // Current Table
+    QString m_table;
 };
 
 #endif // BROWSEWIDGET_H

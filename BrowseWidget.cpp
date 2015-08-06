@@ -7,6 +7,7 @@
 #include <QSqlRecord>
 #include <QSqlField>
 #include <QSqlError>
+#include <QSqlQuery>
 
 #include <QMessageBox>
 
@@ -44,6 +45,9 @@ bool BrowseWidget::setTable(QString table)
     if (m_model->isDirty()) {
         commitChanges();
     }
+
+    // Set new table
+    m_table = table;
 
     // Create model
     m_model->setTable(table);
@@ -119,10 +123,8 @@ void BrowseWidget::on_clearButton_clicked()
     // Display messagebox for confirmation
     if (QMessageBox::Yes == QMessageBox::question(this, "Clear Table", "Are you sure you want to clear this table?")) {
 
-        // Remove all rows TODO make more efficient
-        for (int i = 0; i < m_model->rowCount(); i++) {
-            m_model->removeRow(i);
-        }
+        // Remove all rows (TODO Will this work across all SQL implementations?)
+        m_database->exec("DELETE FROM " + m_table);
 
         // Refresh browse widget
         m_model->select();
