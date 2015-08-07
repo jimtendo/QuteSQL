@@ -103,7 +103,7 @@ void ExplorerWidget::addTable()
 void ExplorerWidget::removeTable()
 {
     // Display messagebox for confirmation
-    if (QMessageBox::Yes == QMessageBox::question(this, "Drop Table", "Are you sure you want to drop this table?")) {
+    if (ui->tableListWidget->currentItem() && QMessageBox::Yes == QMessageBox::question(this, "Drop Table", "Are you sure you want to drop this table?")) {
 
         // Get table name
         QString table = ui->tableListWidget->currentItem()->text();

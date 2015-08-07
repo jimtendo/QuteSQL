@@ -74,3 +74,8 @@ void SavedQueryWidget::saveQueries()
     }
     settings.endArray();
 }
+
+void SavedQueryWidget::on_listWidget_itemActivated(QListWidgetItem *item)
+{
+    emit querySelected(item->text());
+}

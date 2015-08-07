@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = qutesql
 TEMPLATE = app
 
+LIBS += -lz
+
 VERSION = 0.1
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
@@ -34,7 +36,8 @@ SOURCES += main.cpp\
     ColumnDialog.cpp \
     Database.cpp \
     Utilities/SQLSplitter.cpp \
-    Tools/SQLSplitterDialog.cpp
+    Tools/SQLSplitterDialog.cpp \
+    Utilities/QCompressor.cpp
 
 HEADERS  += MainWindow.h \
     DatabaseConnectionWidget.h \
@@ -55,7 +58,8 @@ HEADERS  += MainWindow.h \
     ColumnDialog.h \
     Database.h \
     Utilities/SQLSplitter.h \
-    Tools/SQLSplitterDialog.h
+    Tools/SQLSplitterDialog.h \
+    Utilities/QCompressor.h
 
 FORMS    += MainWindow.ui \
     DatabaseConnectionWidget.ui \

@@ -17,8 +17,9 @@ QueryWidget::QueryWidget(QWidget *parent) :
     // Attach SQL Highlighter
     m_highlighter = new SQLHighlighter(ui->queryEdit->document());
 
-    // Connect history's click with fill function
+    // Connect history and saved queries
     connect(ui->queryHistoryWidget, SIGNAL(querySelected(QString)), this, SLOT(setQuery(QString)));
+    connect(ui->savedQueryWidget, SIGNAL(querySelected(QString)), this, SLOT(setQuery(QString)));
     connect(ui->savedQueryWidget, SIGNAL(addButtonClicked()), this, SLOT(saveQuery()));
 }
 

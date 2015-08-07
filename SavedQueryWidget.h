@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QSqlDatabase>
+#include <QListWidgetItem>
 
 namespace Ui {
 class SavedQueryWidget;
@@ -30,10 +31,12 @@ private:
 
 signals:
     void addButtonClicked();
+    void querySelected(const QString &);
 
 private slots:
     void on_addButton_clicked();
     void on_removeButton_clicked();
+    void on_listWidget_itemActivated(QListWidgetItem *item);
 };
 
 #endif // SAVEDQUERYWIDGET_H
