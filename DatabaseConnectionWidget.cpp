@@ -10,6 +10,7 @@
 #include <QSqlQuery>
 
 #include "Extension/MySQLExtension.h"
+#include "Utilities/QCompressor.h"
 #include "Utilities/SQLSplitter.h"
 
 DatabaseConnectionWidget::DatabaseConnectionWidget(QWidget *parent) :
@@ -122,7 +123,7 @@ bool DatabaseConnectionWidget::connectToDatabase(QString name, QString driver, Q
 bool DatabaseConnectionWidget::importDatabase()
 {
     // Show dialog and get filename
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("SQL Files (*.sql)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::homePath(), tr("SQL Files (*.sql *gz)"));
 
     // If no filename was specified, just return
     if (fileName.isEmpty()) {
@@ -135,9 +136,17 @@ bool DatabaseConnectionWidget::importDatabase()
         return false;
     }
 
+    // File data
+    QByteArray fileData = file.readAll();
+
+    // Decompress if it is a gzip file
+    QFileInfo fileInfo(fileName);
+    if (fileInfo.suffix() == "gz") {
+        fileData = QCompressor::gzDecompress(fileData);//if (!QCompressor::gzipDecompress(file.readAll(), fileData)) {
+    }
+
     // Read string from file and feed into splitter
-    QTextStream in(&file);
-    SQLSplitter splitter(in.readAll());
+    SQLSplitter splitter(fileData);
 
     // Create Progress Dialog
     QProgressDialog progress("Importing database...", "Abort", 0, splitter.getLength());

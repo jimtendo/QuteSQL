@@ -32,6 +32,7 @@ public:
     QMap<QString, int> getDataTypes();
     int addColumn(QString table, QString name, QString type, int length = 0, bool nullable = false, QString defaultValue = "");
     int removeColumn(QString table, QString column);
+    int alterColumn(QString table, QString oldName, QString newName, QString type, int length = 0, bool nullable = false, QString defaultValue = "");
 
 private:
     ExtensionTab *m_toolsTab;

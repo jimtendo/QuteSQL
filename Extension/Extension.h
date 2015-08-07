@@ -39,7 +39,7 @@ enum Capability
     VIEW_SCHEMA = 21,
     ADD_COLUMN = 22,
     REMOVE_COLUMN = 23,
-    EDIT_COLUMN = 24
+    ALTER_COLUMN = 24
 };
 
 enum SchemaColumn
@@ -56,7 +56,8 @@ enum ColumnFlags
     NO_PROPERTIES = 0,
     HAS_LENGTH = 1,
     HAS_NULLABLE = 2,
-    HAS_DEFAULT = 4
+    HAS_DEFAULT = 4,
+    HAS_ENUM = 5
 };
 
 class Extension : public QObject
@@ -86,6 +87,7 @@ public:
     virtual QMap<QString, int> getDataTypes();
     virtual int addColumn(QString table, QString name, QString type, int length = 0, bool nullable = false, QString defaultValue = "");
     virtual int removeColumn(QString table, QString column);
+    virtual int alterColumn(QString table, QString oldName, QString newName, QString type, int length = 0, bool nullable = false, QString defaultValue = "");
 
     virtual void addRelations(QSqlRelationalTableModel *model);
 

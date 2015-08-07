@@ -110,6 +110,11 @@ void SchemaWidget::removeColumn()
 
 void SchemaWidget::on_tableView_activated(const QModelIndex &index)
 {
+    // Only open dialog if supports altering column
+    if (!m_extension->hasCapability(ALTER_COLUMN)) {
+        return;
+    }
+
     // Get column name
     QModelIndex nameIndex = ui->tableView->model()->index(ui->tableView->currentIndex().row(), m_extension->getSchemaColumn(NAME));
     QString name = ui->tableView->model()->data(nameIndex).toString();
@@ -129,7 +134,7 @@ void SchemaWidget::on_tableView_activated(const QModelIndex &index)
 
     // Get nullable
     QModelIndex nullableIndex = ui->tableView->model()->index(ui->tableView->currentIndex().row(), m_extension->getSchemaColumn(NULLABLE));
-    bool nullable = ui->tableView->model()->data(nullableIndex).toBool();
+    bool nullable = (ui->tableView->model()->data(nullableIndex).toString() == "YES") ? true : false;
 
     // Get default value
     QModelIndex defaultValueIndex = ui->tableView->model()->index(ui->tableView->currentIndex().row(), m_extension->getSchemaColumn(DEFAULT_VALUE));
@@ -146,7 +151,7 @@ void SchemaWidget::on_tableView_activated(const QModelIndex &index)
     columnDialog.exec();
 
     // Actually add the column
-    m_extension->addColumn(m_tableName, columnDialog.getName(), columnDialog.getType(), columnDialog.getLength(),
+    m_extension->alterColumn(m_tableName, name, columnDialog.getName(), columnDialog.getType(), columnDialog.getLength(),
                            columnDialog.getNullable(), columnDialog.getDefault());
 
     // Refresh schema

@@ -49,6 +49,7 @@ int MySQLExtension::hasCapability(Capability capability)
         case VIEW_SCHEMA: return true;
         case ADD_COLUMN: return true;
         case REMOVE_COLUMN: return true;
+        case ALTER_COLUMN: return true;
     }
 
     return false;
@@ -107,14 +108,13 @@ int MySQLExtension::exportDatabase()
         // Dump the insert queries
         QSqlQuery selectTableQuery("SELECT * FROM " + table, *m_database);
         if (selectTableQuery.size()) {
-            outputStream << "INSERT INTO `" + table + "` VALUES " << endl;
             while (selectTableQuery.next()) {
-                QString row = "(";
+                QString row = "INSERT INTO `" + table + "` VALUES (";
                 for (int column = 0; column < selectTableQuery.record().count(); column++) {
                     row += m_database->driver()->formatValue(selectTableQuery.record().field(column)) + ",";
                 }
                 row.truncate(row.size()-1);
-                row += "),";
+                row += ");";
                 outputStream << row << endl;
 
                 // If the cancel button was clicked, abort
@@ -125,8 +125,6 @@ int MySQLExtension::exportDatabase()
                 // Update our event loop so that progress dialog updates
                 QCoreApplication::processEvents();
             }
-            outputStream.seek(outputStream.pos()-2);
-            outputStream << ";" << endl << endl;
         }
     }
 
@@ -274,6 +272,34 @@ int MySQLExtension::removeColumn(QString table, QString column)
 {
     // Run the rename query
     QSqlQuery query = m_database->exec("ALTER TABLE " + table + " DROP COLUMN " + column);
+
+    return true;
+}
+
+int MySQLExtension::alterColumn(QString table, QString oldName, QString newName, QString type, int length, bool nullable, QString defaultValue)
+{
+    QString queryString = "ALTER TABLE " + table + " CHANGE " + oldName + " " + newName;
+
+    // If there's a length, embed that in type
+    if (length) {
+        type = type + "(" + QString::number(length) + ")";
+    }
+
+    // Add type
+    queryString += " " + type;
+
+    // If nullable is set, add that
+    if (!nullable) {
+        queryString += " NOT NULL";
+    }
+
+    // if default value is set, add that
+    if (defaultValue.length()) {
+        queryString += " DEFAULT '" + defaultValue + "'";
+    }
+
+    // Run the add column query
+    QSqlQuery query = m_database->exec(queryString);
 
     return true;
 }

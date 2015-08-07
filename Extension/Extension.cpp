@@ -101,6 +101,13 @@ int Extension::removeColumn(QString table, QString column)
     return false;
 }
 
+int Extension::alterColumn(QString table, QString oldName, QString newName, QString type, int length, bool nullable, QString defaultValue)
+{
+    qDebug() << "Alter column not implemented.";
+
+    return false;
+}
+
 void Extension::addRelations(QSqlRelationalTableModel *model)
 {
 

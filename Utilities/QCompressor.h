@@ -12,6 +12,8 @@ class QCompressor
 public:
     static bool gzipCompress(QByteArray input, QByteArray &output, int level = -1);
     static bool gzipDecompress(QByteArray input, QByteArray &output);
+
+    static QByteArray gzDecompress(QByteArray &data);
 };
 
 #endif // QCOMPRESSOR_H
