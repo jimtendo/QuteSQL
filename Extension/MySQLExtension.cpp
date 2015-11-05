@@ -180,6 +180,11 @@ int MySQLExtension::createTable(QString table)
     // Run the drop query
     QSqlQuery query = m_database->exec("CREATE TABLE " + table + "(id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id))");
 
+    // Check if there was an error and display it if there was
+    if (query.lastError().type() != QSqlError::NoError) {
+        QMessageBox::critical(qApp->activeWindow(), "Operation failed", query.lastError().text());
+    }
+
     return true;
 }
 
@@ -188,6 +193,11 @@ int MySQLExtension::removeTable(QString table)
     // Run the drop query
     QSqlQuery query = m_database->exec("SET foreign_key_checks = 0; DROP TABLE " + table + "; SET foreign_key_checks = 1;");
 
+    // Check if there was an error and display it if there was
+    if (query.lastError().type() != QSqlError::NoError) {
+        QMessageBox::critical(qApp->activeWindow(), "Operation failed", query.lastError().text());
+    }
+
     return true;
 }
 
@@ -195,6 +205,11 @@ int MySQLExtension::renameTable(QString from, QString to)
 {
     // Run the rename query
     QSqlQuery query = m_database->exec("RENAME TABLE " + from + " TO " + to);
+
+    // Check if there was an error and display it if there was
+    if (query.lastError().type() != QSqlError::NoError) {
+        QMessageBox::critical(qApp->activeWindow(), "Operation failed", query.lastError().text());
+    }
 
     return true;
 }
@@ -265,6 +280,11 @@ int MySQLExtension::addColumn(QString table, QString name, QString type, int len
     // Run the add column query
     QSqlQuery query = m_database->exec(queryString);
 
+    // Check if there was an error and display it if there was
+    if (query.lastError().type() != QSqlError::NoError) {
+        QMessageBox::critical(qApp->activeWindow(), "Operation failed", query.lastError().text());
+    }
+
     return true;
 }
 
@@ -272,6 +292,11 @@ int MySQLExtension::removeColumn(QString table, QString column)
 {
     // Run the rename query
     QSqlQuery query = m_database->exec("ALTER TABLE " + table + " DROP COLUMN " + column);
+
+    // Check if there was an error and display it if there was
+    if (query.lastError().type() != QSqlError::NoError) {
+        QMessageBox::critical(qApp->activeWindow(), "Operation failed", query.lastError().text());
+    }
 
     return true;
 }
@@ -301,10 +326,10 @@ int MySQLExtension::alterColumn(QString table, QString oldName, QString newName,
     // Run the add column query
     QSqlQuery query = m_database->exec(queryString);
 
-    return true;
-}
+    // Check if there was an error and display it if there was
+    if (query.lastError().type() != QSqlError::NoError) {
+        QMessageBox::critical(qApp->activeWindow(), "Operation failed", query.lastError().text());
+    }
 
-SchemaWidget* MySQLExtension::createSchemaWidget(QWidget *parent)
-{
-    return new MySQLSchemaWidget(parent, m_database);
+    return true;
 }

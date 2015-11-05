@@ -47,7 +47,7 @@ void SQLSplitterDialog::on_buttonBox_accepted()
 
     // If the file exists, open it
     if (inputFile.open(QFile::ReadOnly | QFile::Text) && outputFile.open(QFile::WriteOnly | QFile::Text)) {
-        SQLSplitter splitter(inputFile.readAll());
+        SQLSplitter splitter(&inputFile);
 
         // Split the statements until the end
         while (!splitter.atEnd()) {

@@ -1,13 +1,15 @@
 #ifndef SQLSPLITTER_H
 #define SQLSPLITTER_H
 
+#include <QTextStream>
 #include <QString>
 #include <QStringList>
 
 class SQLSplitter
 {
 public:
-    SQLSplitter(QString sql);
+    SQLSplitter(QIODevice *stream);
+    SQLSplitter(QString *sql);
 
     bool atEnd();
 
@@ -19,8 +21,10 @@ public:
     int getLength();
 
 private:
-    QString m_sql;
+    QTextStream *m_stream;
+    //QString m_sql;
     int m_position;
+    int m_size;
 };
 
 #endif // SQLSPLITTER_H

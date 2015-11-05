@@ -55,7 +55,7 @@ void SqlWidget::on_runSqlButton_clicked()
     QString queryString = ui->sqlEdit->toPlainText();
 
     // Split the query string into multiple queries
-    SQLSplitter splitter(queryString);
+    SQLSplitter splitter(&queryString);
 
     // Enable progress bar
     ui->progressBar->setEnabled(true);

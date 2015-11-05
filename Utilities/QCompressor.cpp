@@ -2,6 +2,9 @@
 
 #include <QDebug>
 
+#define windowBits 15
+#define ENABLE_ZLIB_GZIP 32
+
 /**
  * @brief Compresses the given buffer using the standard GZIP algorithm
  * @param input The buffer to be compressed
@@ -115,6 +118,8 @@ bool QCompressor::gzipDecompress(QByteArray input, QByteArray &output)
     // Is there something to do?
     if(input.length() > 0)
     {
+        qDebug() << "here";
+
         // Prepare inflater status
         z_stream strm;
         strm.zalloc = Z_NULL;
@@ -124,7 +129,7 @@ bool QCompressor::gzipDecompress(QByteArray input, QByteArray &output)
         strm.next_in = Z_NULL;
 
         // Initialize inflater
-        int ret = inflateInit2(&strm, GZIP_WINDOWS_BIT);
+        int ret = inflateInit2(&strm, 15 + 32);
 
         if (ret != Z_OK)
             return(false);
@@ -152,6 +157,7 @@ bool QCompressor::gzipDecompress(QByteArray input, QByteArray &output)
 
             // Inflate chunk and cumulate output
             do {
+                qDebug() << "s'doin";
 
                 // Declare vars
                 char out[GZIP_CHUNK_SIZE];
@@ -169,9 +175,11 @@ bool QCompressor::gzipDecompress(QByteArray input, QByteArray &output)
                 case Z_DATA_ERROR:
                 case Z_MEM_ERROR:
                 case Z_STREAM_ERROR:
+                    qDebug() << "Z_STREAM_ERROR";
+
                     // Clean-up
                     inflateEnd(&strm);
-                    qDebug() << "ZStreamError";
+
                     // Return
                     return(false);
                 }
@@ -194,7 +202,7 @@ bool QCompressor::gzipDecompress(QByteArray input, QByteArray &output)
         return (ret == Z_STREAM_END);
     }
     else
-        return(true);
+        return false;
 }
 
 QByteArray QCompressor::gzDecompress(QByteArray &data)
@@ -218,7 +226,7 @@ QByteArray QCompressor::gzDecompress(QByteArray &data)
     strm.avail_in = data.size();
     strm.next_in = (Bytef*)(data.data());
 
-    ret = inflateInit2(&strm, 15 +  32); // gzip decoding
+    ret = inflateInit2(&strm, 16+MAX_WBITS); // gzip decoding
     if (ret != Z_OK)
         return QByteArray();
 
@@ -232,9 +240,11 @@ QByteArray QCompressor::gzDecompress(QByteArray &data)
 
         switch (ret) {
         case Z_NEED_DICT:
+            qDebug() << "need dicks";
             ret = Z_DATA_ERROR;     // and fall through
         case Z_DATA_ERROR:
         case Z_MEM_ERROR:
+            qDebug() << ret;
             (void)inflateEnd(&strm);
             return QByteArray();
         }

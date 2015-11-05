@@ -63,7 +63,7 @@ bool DatabaseConnectionWidget::createSshTunnel(QString hostname, int remotePort,
     m_sshTunnel.start("ssh", arguments);
 
     // Wait until finished
-    if (!m_sshTunnel.waitForFinished(20000)) {
+    if (!m_sshTunnel.waitForFinished(30000)) {
         return false;
     }
 
@@ -137,16 +137,28 @@ bool DatabaseConnectionWidget::importDatabase()
     }
 
     // File data
-    QByteArray fileData = file.readAll();
+    //QByteArray fileData = file.readAll();
+    QByteArray decompressed;
 
     // Decompress if it is a gzip file
     QFileInfo fileInfo(fileName);
     if (fileInfo.suffix() == "gz") {
-        fileData = QCompressor::gzDecompress(fileData);//if (!QCompressor::gzipDecompress(file.readAll(), fileData)) {
+        /*if (!QCompressor::gzipDecompress(fileData, decompressed)) {
+            return false;
+        }*/
+
+        //decompressed = QCompressor::gzDecompress(fileData);
+
+        //qDebug() << decompressed;
+
+        // Let the user know that this is broken
+        QMessageBox::warning(this, "Operation Failed", "Compressed databases are not supported at this time.");
+
+        return false;
     }
 
     // Read string from file and feed into splitter
-    SQLSplitter splitter(fileData);
+    SQLSplitter splitter(&file);
 
     // Create Progress Dialog
     QProgressDialog progress("Importing database...", "Abort", 0, splitter.getLength());
@@ -172,6 +184,9 @@ bool DatabaseConnectionWidget::importDatabase()
 
         // Increment progress bar value
         progress.setValue(splitter.getPosition());
+
+        // Update our event loop so that progress dialog updates
+        QCoreApplication::processEvents();
     }
 
     // Let the user know the code has been run

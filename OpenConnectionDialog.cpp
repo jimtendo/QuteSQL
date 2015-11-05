@@ -4,6 +4,7 @@
 #include <QSqlDatabase>
 #include <QFileDialog>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QDebug>
 
 OpenConnectionDialog::OpenConnectionDialog(QWidget *parent) :
@@ -120,6 +121,12 @@ void OpenConnectionDialog::on_driverCombo_currentIndexChanged(const QString &arg
         ui->portSpinBox->setEnabled(true);
         ui->portSpinBox->setValue(3306);
         ui->sshTunnelCheckBox->setEnabled(true);
+
+        // Check to see if ssh is on this computer
+        if (QStandardPaths::findExecutable("ssh").isEmpty()) {
+            ui->sshTunnelCheckBox->setEnabled(false);
+            ui->sshTunnelCheckBox->setToolTip("SSH could not be found on this machine.");
+        }
     }
 }
 
@@ -314,29 +321,4 @@ void OpenConnectionDialog::on_sshTunnelCheckBox_toggled(bool checked)
     if (checked) {
         ui->hostnameEdit->setText("127.0.0.1");
     }
-}
-
-void OpenConnectionDialog::initDatabase()
-{
-    QString connectionsQuery =
-    "CREATE TABLE connections(id INT PRIMARY KEY NOT NULL,"
-    "                         driver TEXT NOT NULL,"
-    "                         name TEXT NOT NULL,"
-    "                         database TEXT NOT NULL,"
-    "                         username TEXT,"
-    "                         password TEXT,"
-    "                         hostname TEXT,"
-    "                         port INTEGER,"
-    "                         sshTunnel INTEGER,"
-    "                         sshHostname TEXT,"
-    "                         sshPort INTEGER"
-    "                         );";
-
-    QString savedQuery =
-    "CREATE TABLE saved(id INTEGER PRIMARY KEY NOT NULL,"
-    "                   name TEXT NOT NULL,"
-    "                   command TEXT NOT NULL,"
-    "                   connection_id INTEGER NOT NULL"
-    "                   FOREIGN KEY(connection_id) REFERENCES connections(id)"
-    "                   );";
 }

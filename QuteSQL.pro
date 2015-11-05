@@ -34,10 +34,10 @@ SOURCES += main.cpp\
     QueryHistoryWidget.cpp \
     SavedQueryWidget.cpp \
     ColumnDialog.cpp \
-    Database.cpp \
     Utilities/SQLSplitter.cpp \
     Tools/SQLSplitterDialog.cpp \
-    Utilities/QCompressor.cpp
+    Utilities/QCompressor.cpp \
+    Tools/ImportDatabaseDialog.cpp
 
 HEADERS  += MainWindow.h \
     DatabaseConnectionWidget.h \
@@ -56,10 +56,10 @@ HEADERS  += MainWindow.h \
     QueryHistoryWidget.h \
     SavedQueryWidget.h \
     ColumnDialog.h \
-    Database.h \
     Utilities/SQLSplitter.h \
     Tools/SQLSplitterDialog.h \
-    Utilities/QCompressor.h
+    Utilities/QCompressor.h \
+    Tools/ImportDatabaseDialog.h
 
 FORMS    += MainWindow.ui \
     DatabaseConnectionWidget.ui \
@@ -74,7 +74,8 @@ FORMS    += MainWindow.ui \
     QueryHistoryWidget.ui \
     SavedQueryWidget.ui \
     ColumnDialog.ui \
-    Tools/SQLSplitterDialog.ui
+    Tools/SQLSplitterDialog.ui \
+    Tools/ImportDatabaseDialog.ui
 
 target.path = /usr/bin
 

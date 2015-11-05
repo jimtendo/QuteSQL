@@ -2,15 +2,24 @@
 
 #include <QDebug>
 
-SQLSplitter::SQLSplitter(QString sql)
+SQLSplitter::SQLSplitter(QIODevice *stream)
 {
-    m_sql = sql;
+    m_size = stream->size();
+    m_stream = new QTextStream(stream);
+    m_position = 0;
+}
+
+SQLSplitter::SQLSplitter(QString *sql)
+{
+    m_size = sql->length();
+    m_stream = new QTextStream(sql);
+    //m_sql = sql;
     m_position = 0;
 }
 
 bool SQLSplitter::atEnd()
 {
-    if (m_position == m_sql.length()-1) {
+    if (m_position == m_size-1) {
         return true;
     }
 
@@ -33,7 +42,7 @@ QString SQLSplitter::getNext(int count)
                 break;
             }
 
-            current = m_sql.at(m_position);
+            current = m_stream->read(1)[0];
 
             if (current == '\'' && previous != '\\'){
                 ++quoteCount;
@@ -46,7 +55,9 @@ QString SQLSplitter::getNext(int count)
 
             m_position++;
 
-        } while (!endFound && m_position != m_sql.length());
+            //qDebug() << m_stream->pos() << ':' << m_position;
+
+        } while (!endFound && m_position != m_size);
 
     }
 
@@ -71,5 +82,5 @@ int SQLSplitter::getPosition()
 
 int SQLSplitter::getLength()
 {
-    return m_sql.length();
+    return m_size;
 }

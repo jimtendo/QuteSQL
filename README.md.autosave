@@ -26,4 +26,4 @@ id | database_id | table | column | foreign_table | foreign_column | display_col
 Actually, maybe this isn't the wisest thing to do. This implies that the "Saved Queries" must already have a saved database as opposed to an
 identifying string. An identifying string works well in that we can take a unique database name and then hash it for saving in the Qt config
 files. For example:
-driver:mysql4;
+mysql4:db:root:root:localhost:3306:
