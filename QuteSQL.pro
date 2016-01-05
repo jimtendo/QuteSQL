@@ -30,7 +30,6 @@ SOURCES += main.cpp\
     Extension/MySQLTools.cpp \
     SQLHighlighter.cpp \
     ExportSelectionDialog.cpp \
-    Extension/MySQLSchemaWidget.cpp \
     QueryHistoryWidget.cpp \
     SavedQueryWidget.cpp \
     ColumnDialog.cpp \
@@ -52,7 +51,6 @@ HEADERS  += MainWindow.h \
     Extension/MySQLTools.h \
     SQLHighlighter.h \
     ExportSelectionDialog.h \
-    Extension/MySQLSchemaWidget.h \
     QueryHistoryWidget.h \
     SavedQueryWidget.h \
     ColumnDialog.h \

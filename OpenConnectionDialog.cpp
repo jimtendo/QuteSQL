@@ -227,24 +227,28 @@ void OpenConnectionDialog::reloadConnections()
     for (int i = 0; i < size; i++) {
         settings.setArrayIndex(i);
 
-        // Add connection from settings to list
-        Connection *connection = new Connection;
-        connection->name = settings.value("name").toString();
-        connection->database = settings.value("database").toString();
-        connection->driver = settings.value("driver").toString();
-        connection->hostname = settings.value("hostname").toString();
-        connection->username = settings.value("username").toString();
-        connection->password = settings.value("password").toString();
-        connection->port = settings.value("port").toInt();
-        connection->sshTunnel = settings.value("sshTunnel").toBool();
-        connection->sshHostname = settings.value("sshHostname").toString();
-        connection->sshPort = settings.value("sshPort").toInt();
+        // If filter is empty or the value in the filter matches the name, add it
+        if (ui->filterEdit->text().isEmpty() || settings.value("name").toString().contains(ui->filterEdit->text())) {
 
-        // Append to saved connections
-        savedConnections.append(connection);
+            // Add connection from settings to list
+            Connection *connection = new Connection;
+            connection->name = settings.value("name").toString();
+            connection->database = settings.value("database").toString();
+            connection->driver = settings.value("driver").toString();
+            connection->hostname = settings.value("hostname").toString();
+            connection->username = settings.value("username").toString();
+            connection->password = settings.value("password").toString();
+            connection->port = settings.value("port").toInt();
+            connection->sshTunnel = settings.value("sshTunnel").toBool();
+            connection->sshHostname = settings.value("sshHostname").toString();
+            connection->sshPort = settings.value("sshPort").toInt();
 
-        // Add item to combo box
-        ui->connectionsListWidget->addItem(connection->name);
+            // Append to saved connections
+            savedConnections.append(connection);
+
+            // Add item to combo box
+            ui->connectionsListWidget->addItem(connection->name);
+        }
     }
     settings.endArray();
 
@@ -321,4 +325,9 @@ void OpenConnectionDialog::on_sshTunnelCheckBox_toggled(bool checked)
     if (checked) {
         ui->hostnameEdit->setText("127.0.0.1");
     }
+}
+
+void OpenConnectionDialog::on_filterEdit_textChanged(const QString &arg1)
+{
+    reloadConnections();
 }

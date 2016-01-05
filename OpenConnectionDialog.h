@@ -65,6 +65,8 @@ private slots:
 
     void on_sshTunnelCheckBox_toggled(bool checked);
 
+    void on_filterEdit_textChanged(const QString &arg1);
+
 private:
     void reloadConnections();
 

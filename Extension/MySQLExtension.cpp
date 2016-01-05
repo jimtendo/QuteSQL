@@ -1,6 +1,5 @@
 #include "MySQLExtension.h"
 #include "MySQLTools.h"
-#include "MySQLSchemaWidget.h"
 
 #include <QApplication>
 #include <QAction>
