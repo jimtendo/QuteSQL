@@ -47,7 +47,8 @@
            <string>Add</string>
           </property>
           <property name="icon">
-           <iconset theme="list-add"/>
+           <iconset theme="list-add">
+            <normaloff>.</normaloff>.</iconset>
           </property>
          </widget>
         </item>
@@ -57,7 +58,8 @@
            <string>Remove</string>
           </property>
           <property name="icon">
-           <iconset theme="list-remove"/>
+           <iconset theme="list-remove">
+            <normaloff>.</normaloff>.</iconset>
           </property>
          </widget>
         </item>
@@ -67,26 +69,29 @@
     </widget>
    </item>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>0</number>
+    <widget class="QTabWidget" name="browseWidgets">
+     <property name="tabPosition">
+      <enum>QTabWidget::North</enum>
      </property>
-     <widget class="BrowseWidget" name="browseTab">
-      <attribute name="icon">
-       <iconset theme="folder">
-        <normaloff/>
-       </iconset>
-      </attribute>
-      <attribute name="title">
-       <string>Browse</string>
-      </attribute>
-     </widget>
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
+     <property name="documentMode">
+      <bool>true</bool>
+     </property>
+     <property name="tabsClosable">
+      <bool>true</bool>
+     </property>
+     <property name="tabBarAutoHide">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
   </layout>
   <action name="actionAdd_Table">
    <property name="icon">
-    <iconset theme="list-add"/>
+    <iconset theme="list-add">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Add Table</string>
@@ -94,7 +99,8 @@
   </action>
   <action name="actionRemove_Table">
    <property name="icon">
-    <iconset theme="list-remove"/>
+    <iconset theme="list-remove">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Remove Table</string>
@@ -102,21 +108,22 @@
   </action>
   <action name="actionRename_Table">
    <property name="icon">
-    <iconset theme="document-edit"/>
+    <iconset theme="document-edit">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Rename Table</string>
    </property>
   </action>
+  <action name="actionOpen_In_New_Tab">
+   <property name="icon">
+    <iconset theme="document-new"/>
+   </property>
+   <property name="text">
+    <string>Open In New Tab</string>
+   </property>
+  </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>BrowseWidget</class>
-   <extends>QWidget</extends>
-   <header>BrowseWidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

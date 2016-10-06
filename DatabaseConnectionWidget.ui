@@ -37,8 +37,7 @@
      <widget class="ExplorerWidget" name="explorerTab">
       <attribute name="icon">
        <iconset theme="document-open">
-        <normaloff/>
-       </iconset>
+        <normaloff>.</normaloff>.</iconset>
       </attribute>
       <attribute name="title">
        <string>Explorer</string>
@@ -50,8 +49,7 @@
       </property>
       <attribute name="icon">
        <iconset theme="document-edit">
-        <normaloff/>
-       </iconset>
+        <normaloff>.</normaloff>.</iconset>
       </attribute>
       <attribute name="title">
        <string>Query</string>
@@ -60,8 +58,7 @@
      <widget class="SqlWidget" name="sqlTab">
       <attribute name="icon">
        <iconset theme="document-import">
-        <normaloff/>
-       </iconset>
+        <normaloff>.</normaloff>.</iconset>
       </attribute>
       <attribute name="title">
        <string>SQL</string>

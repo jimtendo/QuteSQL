@@ -8,6 +8,9 @@ ColumnDialog::ColumnDialog(QWidget *parent) :
     ui(new Ui::ColumnDialog)
 {
     ui->setupUi(this);
+
+
+    ui->valuesTextEdit->setHidden(true);
 }
 
 ColumnDialog::~ColumnDialog()
@@ -87,6 +90,8 @@ QString ColumnDialog::getDefault()
     return ui->defaultLineEdit->text();
 }
 
+
+
 void ColumnDialog::on_typeComboBox_currentIndexChanged(int index)
 {
     int flags = ui->typeComboBox->itemData(index).toInt();
@@ -107,5 +112,11 @@ void ColumnDialog::on_typeComboBox_currentIndexChanged(int index)
         ui->defaultLineEdit->setEnabled(true);
     } else {
         ui->defaultLineEdit->setEnabled(false);
+    }
+
+    if (flags & HAS_ENUM) {
+        ui->valuesTextEdit->setEnabled(true);
+    } else {
+        ui->valuesTextEdit->setEnabled(false);
     }
 }

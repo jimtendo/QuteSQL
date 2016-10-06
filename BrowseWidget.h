@@ -5,6 +5,8 @@
 #include <QSqlDatabase>
 #include <QSqlTableModel>
 
+#include "SchemaWidget.h"
+
 namespace Ui {
 class BrowseWidget;
 }
@@ -17,7 +19,7 @@ public:
     explicit BrowseWidget(QWidget *parent = 0);
     ~BrowseWidget();
 
-    void setDatabase(QSqlDatabase *database);
+    void init(QSqlDatabase *database, Extension *extension = NULL);
 
     bool setTable(QString table);
 
@@ -36,17 +38,25 @@ private slots:
 
     void on_saveAsButton_clicked();
 
+    void refresh();
+
 private:
     Ui::BrowseWidget *ui;
 
     // Database
     QSqlDatabase *m_database;
 
+    // Extension
+    Extension *m_extension;
+
     // Model for table
     QSqlTableModel *m_model;
 
     // Current Table
     QString m_table;
+
+    // Schema Widget
+    SchemaWidget *m_schemaWidget;
 };
 
 #endif // BROWSEWIDGET_H

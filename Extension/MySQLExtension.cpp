@@ -57,7 +57,6 @@ int MySQLExtension::hasCapability(Capability capability)
 int MySQLExtension::exportDatabase()
 {
     // Show dialog and get filename
-
     QString fileName = QFileDialog::getSaveFileName(qApp->activeWindow(), tr("Save File"), QDir::homePath(), tr("SQL Files (*.sql)"));
 
     // If no filename was specified, just return
@@ -242,14 +241,14 @@ QMap<QString, int> MySQLExtension::getDataTypes()
     types["longtext"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
     types["binary"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
     types["varbinary"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
-
     types["text"] = NO_PROPERTIES;
     types["varchar"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
-    types["int"] = HAS_LENGTH + HAS_NULLABLE + HAS_DEFAULT;
-    types["int unsigned"] = HAS_LENGTH + HAS_NULLABLE + HAS_DEFAULT;
-    types["date"] = NO_PROPERTIES;;
-    types["datetime"] = NO_PROPERTIES;;
-    types["timestamp"] = NO_PROPERTIES;;
+    types["int"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+    types["int unsigned"] = HAS_LENGTH | HAS_NULLABLE | HAS_DEFAULT;
+    types["date"] = NO_PROPERTIES;
+    types["datetime"] = NO_PROPERTIES;
+    types["timestamp"] = NO_PROPERTIES;
+    types["enum"] = HAS_NULLABLE | HAS_DEFAULT | HAS_ENUM;
 
     return types;
 }

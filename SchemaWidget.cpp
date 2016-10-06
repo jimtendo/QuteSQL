@@ -119,9 +119,18 @@ void SchemaWidget::on_tableView_activated(const QModelIndex &index)
     QModelIndex nameIndex = ui->tableView->model()->index(ui->tableView->currentIndex().row(), m_extension->getSchemaColumn(NAME));
     QString name = ui->tableView->model()->data(nameIndex).toString();
 
-    // Get column type and length
+    // Get column type
     QModelIndex typeIndex = ui->tableView->model()->index(ui->tableView->currentIndex().row(), m_extension->getSchemaColumn(TYPE));
     QString type = ui->tableView->model()->data(typeIndex).toString();
+    qDebug() << type;
+
+    // Extract parameters from type
+    QRegularExpression bracketsExp("/\((.*?)\)/");
+    QString parameters = bracketsExp.match(type).captured();
+    qDebug() << parameters;
+
+    // Remove parameters from type
+    //type.remove()
 
     // Extract length from type
     QRegularExpression lengthExp("[0-9]+");

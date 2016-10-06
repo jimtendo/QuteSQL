@@ -11,12 +11,12 @@
 ExplorerWidget::ExplorerWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ExplorerWidget),
-    m_extension(NULL),
-    m_schemaWidget(NULL)
+    m_extension(NULL)
 {
     ui->setupUi(this);
 
     // Connect actions
+    connect(ui->actionOpen_In_New_Tab, SIGNAL(triggered(bool)), this, SLOT(openInNewTab()));
     connect(ui->actionAdd_Table, SIGNAL(triggered()), this, SLOT(addTable()));
     connect(ui->actionRemove_Table, SIGNAL(triggered()), this, SLOT(removeTable()));
     connect(ui->actionRename_Table, SIGNAL(triggered()), this, SLOT(renameTable()));
@@ -33,10 +33,8 @@ ExplorerWidget::~ExplorerWidget()
 
 void ExplorerWidget::init(QSqlDatabase *database, Extension *extension)
 {
-    // Set the database
+    // Set the database and extension
     m_database = database;
-
-    // Set the extension
     m_extension = extension;
 
     // Hide add button if it's not supported
@@ -47,17 +45,6 @@ void ExplorerWidget::init(QSqlDatabase *database, Extension *extension)
     // Hide remove button if it's not supported
     if (!m_extension || !m_extension->hasCapability(REMOVE_TABLE)) {
         ui->removeButton->setVisible(false);
-    }
-
-    // Set the database for child widgets
-    ui->browseTab->setDatabase(m_database);
-
-    // Setup schema widget (if supported by extension)
-    if (m_extension && m_extension->hasCapability(VIEW_SCHEMA)) {
-        m_schemaWidget = new SchemaWidget(this, m_database, m_extension);
-        m_schemaWidget->init();
-        ui->tabWidget->addTab(m_schemaWidget, QIcon::fromTheme("document-edit"), "Schema");
-        connect(m_schemaWidget, SIGNAL(refreshNeeded()), this, SLOT(refresh()));
     }
 
     // Refresh table list
@@ -71,20 +58,49 @@ void ExplorerWidget::refresh()
 
     // Repopulate list of tables
     foreach (QString table, m_database->tables()) {
-
         QListWidgetItem *tableItem = new QListWidgetItem(QIcon::fromTheme("folder"), table);
         ui->tableListWidget->addItem(tableItem);
     }
+
+    // Remove Browse Tabs that no longer have corresponding tables
+    // @TODO
 }
 
 void ExplorerWidget::on_tableListWidget_itemActivated(QListWidgetItem *item)
 {
-    // Set the browse tab to this table
-    ui->browseTab->setTable(item->text());
+    // Get the currently active browse widget
+    BrowseWidget *activeWidget = (BrowseWidget*)ui->browseWidgets->currentWidget();
 
-    // If schema is supported, then set schema to this table
-    if (m_schemaWidget) {
-        m_schemaWidget->setTable(item->text());
+    // If there is none, create it
+    if (!activeWidget) {
+        // Create default browse widget and add it to browse widgets
+        activeWidget = new BrowseWidget;
+        activeWidget->init(m_database, m_extension);
+        ui->browseWidgets->addTab(activeWidget, QIcon::fromTheme("server-database"), "Default");
+        ui->browseWidgets->setCurrentWidget(activeWidget);
+    }
+
+    // Set the table and tabb text
+    activeWidget->setTable(item->text());
+    ui->browseWidgets->setTabText(ui->browseWidgets->currentIndex(), item->text());
+}
+
+void ExplorerWidget::openInNewTab()
+{
+    // If there is a table selected...
+    if (ui->tableListWidget->currentItem()) {
+
+        // Get table name
+        QString table = ui->tableListWidget->currentItem()->text();
+
+        // Create browse widget
+        BrowseWidget *browseWidget = new BrowseWidget;
+        browseWidget->init(m_database, m_extension);
+        browseWidget->setTable(table);
+
+        // Create icon and this to the list of browse widget tabs
+        ui->browseWidgets->addTab(browseWidget, QIcon::fromTheme("server-database"), table);
+        ui->browseWidgets->setCurrentWidget(browseWidget);
     }
 }
 
@@ -136,6 +152,9 @@ void ExplorerWidget::on_tableListWidget_customContextMenuRequested(const QPoint 
     // Setup context menu
     QMenu *menu = new QMenu(this);
 
+    // Add button to open in new tab
+    menu->addAction(ui->actionOpen_In_New_Tab);
+
     // If our extension can add tables
     if (m_extension && m_extension->hasCapability(ADD_TABLE)) {
         menu->addAction(ui->actionAdd_Table);
@@ -153,4 +172,16 @@ void ExplorerWidget::on_tableListWidget_customContextMenuRequested(const QPoint 
 
     // Show the menu
     menu->popup(ui->tableListWidget->viewport()->mapToGlobal(pos));
+}
+
+void ExplorerWidget::on_browseWidgets_tabCloseRequested(int index)
+{
+    // Get a pointer to the tab instance so we can delete it later (at the end of this function)
+    BrowseWidget *widget = (BrowseWidget*)ui->browseWidgets->widget(index);
+
+    // Remove the tab
+    ui->browseWidgets->removeTab(index);
+
+    // Actually delete the widget
+    delete widget;
 }

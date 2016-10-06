@@ -23,12 +23,14 @@ public:
     void setLength(int length);
     void setNullable(bool nullable);
     void setDefaultValue(QString defaultValue);
+    void setValues(QString values);
 
     QString getName();
     QString getType();
     int getLength();
     bool getNullable();
     QString getDefault();
+    QString getValues();
 
 private slots:
     void on_typeComboBox_currentIndexChanged(int index);

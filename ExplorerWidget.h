@@ -6,6 +6,7 @@
 #include <QListWidgetItem>
 
 #include "Extension/Extension.h"
+#include "BrowseWidget.h"
 
 namespace Ui {
 class ExplorerWidget;
@@ -22,6 +23,7 @@ public:
     void init(QSqlDatabase *database, Extension *extension = NULL);
 
 public slots:
+    void openInNewTab();
     void addTable();
     void removeTable();
     void renameTable();
@@ -30,6 +32,8 @@ public slots:
 private slots:
     void on_tableListWidget_itemActivated(QListWidgetItem *item);
     void on_tableListWidget_customContextMenuRequested(const QPoint &pos);
+
+    void on_browseWidgets_tabCloseRequested(int index);
 
 private:
     Ui::ExplorerWidget *ui;
@@ -40,8 +44,8 @@ private:
     // Extension
     Extension *m_extension;
 
-    // Schema Widget
-    SchemaWidget *m_schemaWidget;
+    // Browse Widgets
+    QList<BrowseWidget> m_browseWidgets;
 };
 
 #endif // EXPLORERWIDGET_H
